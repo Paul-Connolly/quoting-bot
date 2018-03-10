@@ -40,3 +40,45 @@ C:\Development\uni\quoting-bot\QuotingBot\QuotingBot\obj\Debug\QuotingBot.csproj
 C:\Development\uni\quoting-bot\QuotingBot\QuotingBot\obj\Debug\QuotingBot.csproj.CopyComplete
 C:\Development\uni\quoting-bot\QuotingBot\QuotingBot\obj\Debug\Bot Application.dll
 C:\Development\uni\quoting-bot\QuotingBot\QuotingBot\obj\Debug\Bot Application.pdb
+C:\Development\uni\quoting-bot\QuotingBot\bin\Bot Application.dll.config
+C:\Development\uni\quoting-bot\QuotingBot\bin\Bot Application.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Bot Application.pdb
+C:\Development\uni\quoting-bot\QuotingBot\bin\Autofac.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Chronic.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.Autofac.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.Bot.Connector.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.IdentityModel.Protocol.Extensions.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.Rest.ClientRuntime.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.WindowsAzure.Configuration.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Newtonsoft.Json.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.IdentityModel.Tokens.Jwt.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.Net.Http.Formatting.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.Web.Http.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.Web.Http.WebHost.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\Autofac.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.Autofac.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.Bot.Connector.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.IdentityModel.Protocol.Extensions.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\Microsoft.WindowsAzure.Configuration.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\Newtonsoft.Json.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.IdentityModel.Tokens.Jwt.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.Net.Http.Formatting.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.Web.Http.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\System.Web.Http.WebHost.xml
+C:\Development\uni\quoting-bot\QuotingBot\bin\ar\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\cs\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\de-dE\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\en\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\es\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\fa\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\fr\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\ja\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\ru\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\bin\zh-hans\Microsoft.Bot.Builder.resources.dll
+C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csprojResolveAssemblyReference.cache
+C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csproj.CoreCompileInputs.cache
+C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csproj.CopyComplete
+C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\Bot Application.dll
+C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\Bot Application.pdb
