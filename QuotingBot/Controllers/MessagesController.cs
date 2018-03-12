@@ -1,10 +1,12 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using QuotingBot.Dialogs;
+using QuotingBot.Models;
 
 namespace QuotingBot
 {
@@ -19,7 +21,7 @@ namespace QuotingBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => QuoteBotDialog.dialog);
+                await Conversation.SendAsync(activity, MakeLuisDialog);
             }
             else
             {
@@ -27,6 +29,11 @@ namespace QuotingBot
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
+        }
+
+        private IDialog<QuoteType> MakeLuisDialog()
+        {
+            return Chain.From(() => new LUISDialog(QuoteType.BuildForm));
         }
 
         private Activity HandleSystemMessage(Activity message)
