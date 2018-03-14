@@ -9,8 +9,7 @@ namespace QuotingBot.Models
     public enum QuoteTypeOptions
     {
         Motor,
-        Home,
-        CV
+        Home
     }
 
     public enum CarType
