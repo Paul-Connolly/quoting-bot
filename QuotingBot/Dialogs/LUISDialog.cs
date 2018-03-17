@@ -10,11 +10,11 @@ namespace QuotingBot.Dialogs
 {
     [LuisModel("fdc7ea4d-1480-467f-978e-61d4a3345051", "0caa7c26506c48bb801e68daca06077c")]
     [Serializable]
-    public class LUISDialog : LuisDialog<QuoteType>
+    public class LUISDialog : LuisDialog<MotorQuote>
     {
-        private readonly BuildFormDelegate<QuoteType> GetQuote;
+        private readonly BuildFormDelegate<MotorQuote> GetQuote;
 
-        public LUISDialog(BuildFormDelegate<QuoteType> getQuote) => GetQuote = getQuote;
+        public LUISDialog(BuildFormDelegate<MotorQuote> getQuote) => GetQuote = getQuote;
 
         [LuisIntent("")]
         public async Task None(IDialogContext context, LuisResult result)
@@ -34,11 +34,11 @@ namespace QuotingBot.Dialogs
             context.Wait(MessageReceived);
         }
 
-        [LuisIntent("QuoteType")]
+        [LuisIntent("MotorQuote")]
         public async Task QuoteType(IDialogContext context, LuisResult result)
         {
-            var quotationForm = new FormDialog<QuoteType>(new QuoteType(), this.GetQuote, FormOptions.PromptInStart);
-            context.Call<QuoteType>(quotationForm, Callback);
+            var quotationForm = new FormDialog<MotorQuote>(new MotorQuote(), this.GetQuote, FormOptions.PromptInStart);
+            context.Call<MotorQuote>(quotationForm, Callback);
         }
     }
 }

@@ -21,18 +21,17 @@ namespace QuotingBot.Dialogs
                 }),
                 new DefaultCase<string, IDialog<string>>((context, text) =>
                 {
-                    return Chain.ContinueWith(FormDialog.FromForm(QuoteType.BuildForm, FormOptions.PromptInStart), AfterGreetingContinuation);
+                    return Chain.ContinueWith(FormDialog.FromForm(MotorQuote.BuildQuickQuoteForm, FormOptions.PromptInStart), AfterGreetingContinuation);
                 }))
             .Unwrap()
             .PostToUser();
 
         private async static Task<IDialog<string>> AfterGreetingContinuation(IBotContext context, IAwaitable<object> item)
         {
-            var token = await item;
+            //var token = await item;
             var name = "User";
             context.UserData.TryGetValue<string>("Name", out name);
             return Chain.Return($"Thank you {name} for using the quoting bot!");
-
         }
     }
 }

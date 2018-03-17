@@ -82,3 +82,43 @@ C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csproj.CoreCompil
 C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csproj.CopyComplete
 C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\Bot Application.dll
 C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\Bot Application.pdb
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Bot Application.dll.config
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Bot Application.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Bot Application.pdb
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Autofac.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Chronic.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.Autofac.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.Bot.Connector.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.IdentityModel.Protocol.Extensions.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.Rest.ClientRuntime.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.WindowsAzure.Configuration.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Newtonsoft.Json.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.IdentityModel.Tokens.Jwt.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.Net.Http.Formatting.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.Web.Http.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.Web.Http.WebHost.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Autofac.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.Bot.Builder.Autofac.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.Bot.Connector.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.IdentityModel.Protocol.Extensions.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Microsoft.WindowsAzure.Configuration.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\Newtonsoft.Json.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.IdentityModel.Tokens.Jwt.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.Net.Http.Formatting.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.Web.Http.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\System.Web.Http.WebHost.xml
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\ar\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\cs\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\de-dE\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\en\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\es\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\fa\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\fr\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\ja\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\ru\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\bin\zh-hans\Microsoft.Bot.Builder.resources.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csproj.CoreCompileInputs.cache
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\obj\Debug\Bot Application.dll
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\obj\Debug\Bot Application.pdb
