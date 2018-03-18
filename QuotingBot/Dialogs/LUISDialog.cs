@@ -3,6 +3,7 @@ using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using QuotingBot.Models;
+using QuotingBot.Models.Home;
 using System;
 using System.Threading.Tasks;
 
@@ -12,9 +13,9 @@ namespace QuotingBot.Dialogs
     [Serializable]
     public class LUISDialog : LuisDialog<MotorQuote>
     {
-        private readonly BuildFormDelegate<MotorQuote> GetQuote;
+        private readonly BuildFormDelegate<MotorQuote> GetMotorQuote;
 
-        public LUISDialog(BuildFormDelegate<MotorQuote> getQuote) => GetQuote = getQuote;
+        public LUISDialog(BuildFormDelegate<MotorQuote> getMotorQuote) => GetMotorQuote = getMotorQuote;
 
         [LuisIntent("")]
         public async Task None(IDialogContext context, LuisResult result)
@@ -27,18 +28,18 @@ namespace QuotingBot.Dialogs
         public async Task Greeting(IDialogContext context, LuisResult result)
         {
             context.Call(new RootDialog(), Callback);
+        }        
+
+        [LuisIntent("MotorQuote")]
+        public async Task MotorQuote(IDialogContext context, LuisResult result)
+        {
+            var quotationForm = new FormDialog<MotorQuote>(new MotorQuote(), this.GetMotorQuote, FormOptions.PromptInStart);
+            context.Call<MotorQuote>(quotationForm, Callback);
         }
 
         private async Task Callback(IDialogContext context, IAwaitable<object> result)
         {
             context.Wait(MessageReceived);
-        }
-
-        [LuisIntent("MotorQuote")]
-        public async Task QuoteType(IDialogContext context, LuisResult result)
-        {
-            var quotationForm = new FormDialog<MotorQuote>(new MotorQuote(), this.GetQuote, FormOptions.PromptInStart);
-            context.Call<MotorQuote>(quotationForm, Callback);
         }
     }
 }

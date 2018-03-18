@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="https://services2.relay.ie/relay.homerates.services.webservices/household.asmx?wsdl" docRef="https://services2.relay.ie/relay.homerates.services.webservices/household.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="https://services2.relay.ie/relay.homerates.services.webservices/household.asmx" xmlns:q1="http://relay.ie/Household" binding="q1:HouseholdSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="https://services2.relay.ie/relay.homerates.services.webservices/household.asmx" xmlns:q2="http://relay.ie/Household" binding="q2:HouseholdSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
