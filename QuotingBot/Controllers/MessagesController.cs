@@ -31,10 +31,7 @@ namespace QuotingBot
             return response;
         }
 
-        private IDialog<MotorQuote> MakeLuisDialog()
-        {
-            return Chain.From(() => new LUISDialog(MotorQuote.BuildQuickQuoteForm));
-        }
+        private IDialog<MotorQuote> MakeLuisDialog() => Chain.From(() => new LUISDialog(MotorQuote.BuildQuickQuoteForm));
 
         private Activity HandleSystemMessage(Activity message)
         {

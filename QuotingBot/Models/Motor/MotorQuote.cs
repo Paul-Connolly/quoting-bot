@@ -38,7 +38,7 @@ namespace QuotingBot.Models
         Seven,
         Eight,
         Nine,
-        MoreThanNine
+        OverNine
     }
 
     [Serializable]
@@ -47,15 +47,15 @@ namespace QuotingBot.Models
         public static RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
         public string VehicleRegistration;
         public int? VehicleValue;
-        //public string AreaVehicleIsKept;
-        //public DateTime? EffectiveDate;
+        public string AreaVehicleIsKept;
+        public DateTime? EffectiveDate;
         public string FirstName;
-        //public string LastName;
-        //public DateTime? DateOfBirth;
-        //public LicenceTypes? LicenceType;
-        //public NoClaimsDiscount? NoClaimsDiscount;
-        //public string PrimaryContactNumber;
-        //public string EmailAddress;
+        public string LastName;
+        public DateTime? DateOfBirth;
+        public LicenceTypes? LicenceType;
+        public NoClaimsDiscount? NoClaimsDiscount;
+        public string PrimaryContactNumber;
+        public string EmailAddress;
 
         public static IForm<MotorQuote> BuildQuickQuoteForm()
         {
@@ -87,7 +87,7 @@ namespace QuotingBot.Models
                     }
                 )
                 .AddRemainingFields()
-                .Confirm("Would you to request a quote using the following details?" +
+                .Confirm("Would you to request a quote using the following details?\n" +
                     "Car Registration: {VehicleRegistration}")
                 .Message("Going to get your quotes...")
                 .OnCompletion(getQuote)
@@ -139,7 +139,84 @@ namespace QuotingBot.Models
         private static IrishMQRiskInfo BuildIrishMQRiskInfo(MotorQuote state)
         {
             var riskInfo = new IrishMQRiskInfo();
-            riskInfo.Driver[0].Forename = state.FirstName;
+
+            riskInfo.Proposer = new IrishProposerInfo
+            {
+                ProposerType = enmProposerType.eIndividual,
+                TitleCode = "005",
+                Title = "Mr.",
+                ForeName = state.FirstName,
+                SurName = state.LastName,
+                Sex = "M",
+                MaritalStatus = "M",
+                DateOfBirth = (DateTime)state.DateOfBirth,
+                Address = new IrishAddressInfo
+                {
+                    Line1 = "1 Main Street",
+                    Line2 = "Donegal",
+                    Line3 = "County Donegal",
+                    GeoCode = "38443614",
+                    MatchType = "subbuilding",
+                    MatchLevel = "100",
+                    RatingFactor = "1.391",
+                    MRACode = "MRA268067012",
+                    SmallAreaIdentifier = 5354,
+                    EcadIdentifier = 1700378046,
+                    EcadMatchLevelCode = "2",
+                    EcadMatchResultCode = "100",
+                    Eircode = "D11F6E5",
+                    ProvidedBy = AddressProvider.Gamma
+                },
+                Contact = new IrishContactInfo
+                {
+                    Home = state.PrimaryContactNumber,
+                    Email = state.EmailAddress
+                },
+                NCD = new IrishNCDInfo
+                {
+                    ClaimedYearsEarned = 5,
+                    DrivingExperienceYears = 0,
+                    ClaimedCountry = "IE",
+                    ClaimedInsurer = "029",
+                    PreviousPolicyNumber = "123456789",
+                    DrivingExperiencePolicyExpiryDate = DateTime.Now.AddDays(1),
+                    ClaimedDiscountType = "S",
+                    ClaimedBonusProtectionType = "F",
+                    ClaimedProtectedInd = false,
+                    ProtectionRequiredInd = true,
+                    DrivingExperienceProvenInd = true,
+                    ClaimedProvenInd = false,
+                    PreviousPolicyExpiryDate = DateTime.Now.AddDays(-5),
+                    RebrokeYearsProvided = false,
+                    RebrokeYears = 0
+                },
+                YearsAtHomeAddress = 0,
+                HomeownerInd = "N"
+            };
+            riskInfo.Policy = new IrishPolicyInfo
+            {
+                PolicyNumber = "QWERTY12345",
+                StartTime = "000100",
+                EndTime = "120000",
+                PreviousInsurer = "029",
+                QuoteAuthor = "RLY",
+                CurrencyRequired = "EUR",
+                InceptionDate = DateTime.Now,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddYears(1),
+                CurrentYear = DateTime.Now.Year,
+                PreviouslyInsuredInd = true,
+                SecondCarQuotationInd = false
+            };
+            riskInfo.Driver[0] = new IrishDriverInfo
+            {
+                PRN = 1,
+                RelationshipToProposer = "Z",
+                DriverLicenceNumber = "550956042",
+                Title = "005",
+                Forename = state.FirstName,
+                Surname = state.LastName
+            };
 
             return riskInfo;
         }
