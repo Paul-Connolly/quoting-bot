@@ -215,7 +215,114 @@ namespace QuotingBot.Models
                 DriverLicenceNumber = "550956042",
                 Title = "005",
                 Forename = state.FirstName,
-                Surname = state.LastName
+                Surname = state.LastName,
+                Sex = "M",
+                MaritalStatus = "M",
+                LicenceType = "B",
+                LicenceCountry = "IE",
+                ProsecutionPending = false,
+                LicenceRestrictionInd = false,
+                QualificationsInd = false,
+                NonMotoringConviction = false,
+                PrevRefusedCover = false,
+                OtherVehicleOwned = false,
+                PrevRestrictiveTerms = false,
+                RegisteredDisabled = false,
+                ClaimsIndicator = false,
+                PenaltyPointsIndicator = false,
+                ConvictionsInd = false,
+                MedicalConditionsInd = false,
+                ResidentOutsideIreland = false,
+                PermResident = true,
+                NonDrinker = false,
+                TempAdditionalDriver = false,
+                DateOfBirth = new DateTime(1979, 06, 04, 02, 00, 00),
+                IrelandResidencyDate = new DateTime(2000, 04, 11, 02, 00, 00),
+                IrelandLicenceDate = new DateTime(2014, 08, 28, 02, 00, 00),
+                NameddriverNCDClaimedYears = 6,
+                ResidentWithProposer = false,
+                FullTimeUseOfOtherCar = false,
+                IsResidentWithProposer = false,
+                PrevImposedTerms = false,
+                Occupation = new IrishOccupationInfo[]
+                {
+                    new IrishOccupationInfo
+                    {
+                        FullTimeEmployment = true,
+                        OccupationCode = "SSB",
+                        EmployersBusiness = "120",
+                        EmploymentType = "E"
+                    }
+                },
+                DrivesVehicle = new IrishDrivesVehicleInfo[]
+                {
+                    new IrishDrivesVehicleInfo
+                    {
+                        VehicleReferenceNumber = 1,
+                        DrivingFrequency = "M",
+                        Use = "4"
+                    }
+                }
+            };
+            riskInfo.Vehicle[0] = new IrishVehicleInfo
+            {
+                PRN = 1,
+                Value = 4000,
+                AnnualMilage = 10000,
+                BusinessMileage = 0,
+                PleasureMileage = 10000,
+                NonStandardAudioValue = 0,
+                CarPhoneValue = 0,
+                NoDriversFullLicence = 1,
+                NoOfSeats = 5,
+                ManufacturedYear = 2005,
+                FirstRegdYear = 2005,
+                ModelCode = "95012085",
+                ModelName = "AUDI A3 1.6 ATTRACTION SPORTPACK",
+                KeptAt = "HA",
+                AreaKeptAt = "DX11",
+                CubicCapacity = "1595",
+                BodyType = "5",
+                OvernightLocation = "2",
+                AreaRating = "DX11",
+                Owner = "1",
+                RegistrationNo = "05OY3466",
+                RegisteredKeeper = "1",
+                DateManufactured = new DateTime(2005, 12, 15, 02, 00, 00),
+                DateFirstRegistered = new DateTime(2005, 12, 15, 02, 00, 00),
+                DatePurchased = new DateTime(2017, 05, 01, 02, 00, 00),
+                ModifiedInd = false,
+                IrelandRegistered = false,
+                Imported = false,
+                SecurityDeviceInd = true,
+                TrailerInd = false,
+                SecondCarInd = false,
+                TemporaryAddVehicle = false,
+                TemporarySubInd = false,
+                LeftOrRightHandDrive = (char) 82,
+                ReferenceNumber = 1,
+                Security = new IrishSecurityInfo
+                {
+                    Type = "1002"
+                },
+                Uses = new IrishUsesInfo
+                {
+                    Code = "4"
+                },
+                DrivenBy = new IrishDrivenByInfo[]
+                {
+                    new IrishDrivenByInfo
+                    {
+                        DriverReferenceNumber = 1,
+                        DrivingFrequency = "M"
+                    },
+                    new IrishDrivenByInfo()
+                    {
+                        DriverReferenceNumber = 2,
+                        DrivingFrequency = "F"
+                    }
+                },
+                VehicleType = 0
             };
 
             return riskInfo;
