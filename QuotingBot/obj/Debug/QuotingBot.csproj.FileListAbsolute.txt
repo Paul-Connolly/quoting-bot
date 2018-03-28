@@ -121,3 +121,4 @@ C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csproj.CoreCompil
 C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csproj.CopyComplete
 C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\Bot Application.dll
 C:\Development\uni\quoting-bot\QuotingBot\obj\Debug\Bot Application.pdb
+D:\Development\Uni\Source\Git\quoting-bot\QuotingBot\obj\Debug\QuotingBot.csprojResolveAssemblyReference.cache

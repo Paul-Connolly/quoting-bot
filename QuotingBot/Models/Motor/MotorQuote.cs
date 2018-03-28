@@ -61,11 +61,11 @@ namespace QuotingBot.Models
         {
             OnCompletionAsyncDelegate<MotorQuote> getQuote = async (context, state) =>
             {
-                var quotes = motorService.GetQuickQuotesSpecified(
-                    RiskData: BuildIrishMQRiskInfo(state), 
+                motorService.GetQuickQuotesSpecifiedAsync(
+                    RiskData: BuildIrishMQRiskInfo(state),
                     EnableValidation: true, 
                     TimeTravelDate: null, 
-                    MessageRequestInfo: null);
+                    MessageRequestInfo: BuildMessageRequestInfo());
                 await context.PostAsync("Getting your quotes!");
             };
 
@@ -92,7 +92,7 @@ namespace QuotingBot.Models
                 .Message("Going to get your quotes...")
                 .OnCompletion(getQuote)
                 .Build();
-        }        
+        }
 
         public static Vehicle GetVehicle(string vehicleRegistration)
         {
@@ -324,8 +324,58 @@ namespace QuotingBot.Models
                 },
                 VehicleType = 0
             };
-
+            riskInfo.Cover[0] = new IrishCoverInfo
+            {
+                Code = "01",
+                PeriodUnits = "2",
+                Period = "12",
+                CertificateNumber = "0",
+                StartTime = "000100",
+                StartDate = new DateTime(2017, 07, 10, 00, 00, 00),
+                ExpiryDate = new DateTime(2018, 07, 09, 01, 00, 00),
+                RequiredDrivers = "5",
+                VehicleRefNo = 1,
+                TotalTempMTA = 0,
+                TotalTempMTAInForce = 0,
+                TotalTempAddDriverInForce = 0,
+                TotalTempAddDriver = 0,
+                TotalTempAddVehicle = 0,
+                TotalTempSub = 0,
+                VoluntaryExcess = 300,
+                WindscreenLimit = 0
+            };
+            riskInfo.Intermediary = new IntermediaryInfo
+            {
+                Name = "RE0668",
+                Number = 0,
+                RIAccountIdentifier = "relay1:0099"
+            };
+            riskInfo.TransactionDetail = new TransactionDetails
+            {
+                BrokerFee = 0
+            };
+            riskInfo.DiscountInfo = new IrishDiscountInfo
+            {
+                IsWebQuote = false,
+                WebDiscountPercentage = 0
+            };
             return riskInfo;
+        }
+
+        private static MessageRequestInfo BuildMessageRequestInfo()
+        {
+            var messageRequestInfo = new MessageRequestInfo
+            {
+                BreakdownsSpecified1 = new BreakdownsSpecified
+                {
+                    BreakdownSpecified1 = new BreakdownType[]
+                    {
+                        BreakdownType.ExcessItems
+                    }
+                }
+            };
+
+            return messageRequestInfo;
         }
     }
 }
