@@ -21,7 +21,7 @@ namespace QuotingBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, MakeLuisDialog);
+                await Conversation.SendAsync(activity, () => new RootDialog());
             }
             else
             {
@@ -30,8 +30,6 @@ namespace QuotingBot
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
         }
-
-        private IDialog<MotorQuote> MakeLuisDialog() => Chain.From(() => new LUISDialog(MotorQuote.BuildQuickQuoteForm));
 
         private Activity HandleSystemMessage(Activity message)
         {

@@ -61,7 +61,7 @@ namespace QuotingBot.Models
         {
             OnCompletionAsyncDelegate<MotorQuote> getQuote = async (context, state) =>
             {
-                motorService.GetQuickQuotesSpecifiedAsync(
+                var quotes = motorService.GetQuickQuotesSpecified(
                     RiskData: BuildIrishMQRiskInfo(state),
                     EnableValidation: true, 
                     TimeTravelDate: null, 
@@ -139,6 +139,66 @@ namespace QuotingBot.Models
         private static IrishMQRiskInfo BuildIrishMQRiskInfo(MotorQuote state)
         {
             var riskInfo = new IrishMQRiskInfo();
+            riskInfo.Driver = new IrishDriverInfo[1];
+            riskInfo.Vehicle = new IrishVehicleInfo[1];
+            riskInfo.Cover = new IrishCoverInfo[1];
+
+            var driver = new IrishDriverInfo
+            {
+                PRN = 1,
+                RelationshipToProposer = "Z",
+                DriverLicenceNumber = "550956042",
+                Title = "005",
+                Forename = state.FirstName,
+                Surname = state.LastName,
+                Sex = "M",
+                MaritalStatus = "M",
+                LicenceType = "B",
+                LicenceCountry = "IE",
+                ProsecutionPending = false,
+                LicenceRestrictionInd = false,
+                QualificationsInd = false,
+                NonMotoringConviction = false,
+                PrevRefusedCover = false,
+                OtherVehicleOwned = false,
+                PrevRestrictiveTerms = false,
+                RegisteredDisabled = false,
+                ClaimsIndicator = false,
+                PenaltyPointsIndicator = false,
+                ConvictionsInd = false,
+                MedicalConditionsInd = false,
+                ResidentOutsideIreland = false,
+                PermResident = true,
+                NonDrinker = false,
+                TempAdditionalDriver = false,
+                DateOfBirth = new DateTime(1979, 06, 04, 02, 00, 00),
+                IrelandResidencyDate = new DateTime(2000, 04, 11, 02, 00, 00),
+                IrelandLicenceDate = new DateTime(2014, 08, 28, 02, 00, 00),
+                NameddriverNCDClaimedYears = 6,
+                ResidentWithProposer = false,
+                FullTimeUseOfOtherCar = false,
+                IsResidentWithProposer = false,
+                PrevImposedTerms = false,
+                Occupation = new IrishOccupationInfo[]
+                {
+                    new IrishOccupationInfo
+                    {
+                        FullTimeEmployment = true,
+                        OccupationCode = "SSB",
+                        EmployersBusiness = "120",
+                        EmploymentType = "E"
+                    }
+                },
+                DrivesVehicle = new IrishDrivesVehicleInfo[]
+                {
+                    new IrishDrivesVehicleInfo
+                    {
+                        VehicleReferenceNumber = 1,
+                        DrivingFrequency = "M",
+                        Use = "4"
+                    }
+                }
+            };
 
             riskInfo.Proposer = new IrishProposerInfo
             {
@@ -208,62 +268,8 @@ namespace QuotingBot.Models
                 PreviouslyInsuredInd = true,
                 SecondCarQuotationInd = false
             };
-            riskInfo.Driver[0] = new IrishDriverInfo
-            {
-                PRN = 1,
-                RelationshipToProposer = "Z",
-                DriverLicenceNumber = "550956042",
-                Title = "005",
-                Forename = state.FirstName,
-                Surname = state.LastName,
-                Sex = "M",
-                MaritalStatus = "M",
-                LicenceType = "B",
-                LicenceCountry = "IE",
-                ProsecutionPending = false,
-                LicenceRestrictionInd = false,
-                QualificationsInd = false,
-                NonMotoringConviction = false,
-                PrevRefusedCover = false,
-                OtherVehicleOwned = false,
-                PrevRestrictiveTerms = false,
-                RegisteredDisabled = false,
-                ClaimsIndicator = false,
-                PenaltyPointsIndicator = false,
-                ConvictionsInd = false,
-                MedicalConditionsInd = false,
-                ResidentOutsideIreland = false,
-                PermResident = true,
-                NonDrinker = false,
-                TempAdditionalDriver = false,
-                DateOfBirth = new DateTime(1979, 06, 04, 02, 00, 00),
-                IrelandResidencyDate = new DateTime(2000, 04, 11, 02, 00, 00),
-                IrelandLicenceDate = new DateTime(2014, 08, 28, 02, 00, 00),
-                NameddriverNCDClaimedYears = 6,
-                ResidentWithProposer = false,
-                FullTimeUseOfOtherCar = false,
-                IsResidentWithProposer = false,
-                PrevImposedTerms = false,
-                Occupation = new IrishOccupationInfo[]
-                {
-                    new IrishOccupationInfo
-                    {
-                        FullTimeEmployment = true,
-                        OccupationCode = "SSB",
-                        EmployersBusiness = "120",
-                        EmploymentType = "E"
-                    }
-                },
-                DrivesVehicle = new IrishDrivesVehicleInfo[]
-                {
-                    new IrishDrivesVehicleInfo
-                    {
-                        VehicleReferenceNumber = 1,
-                        DrivingFrequency = "M",
-                        Use = "4"
-                    }
-                }
-            };
+
+            riskInfo.Driver[0] = driver;
             riskInfo.Vehicle[0] = new IrishVehicleInfo
             {
                 PRN = 1,

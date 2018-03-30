@@ -1,53 +1,79 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
+using QuotingBot.Models;
 
 namespace QuotingBot.Dialogs
 {
     [Serializable]
     public class RootDialog : IDialog<object>
     {
+        private const string MotorInsuranceOption = "Motor insurance";
+        private const string HomeInsuranceOption = "Home insurance";
+
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Hi, I'm Ava - your friendly quoting bot!");
-            await Respond(context);
-            context.Wait(MessageReceivedAsync);
+            context.Wait(this.MessageReceivedAsync);
         }
 
-        private static async Task Respond(IDialogContext context)
+        private async Task Respond(IDialogContext context)
         {
-            var userName = String.Empty;
-            context.UserData.TryGetValue<string>("Name", out userName);
+            await context.PostAsync("What can I quote you for today?");
+            ShowQuoteOptions(context);
+        }
 
-            if (string.IsNullOrEmpty(userName))
+        private void ShowQuoteOptions(IDialogContext context)
+        {
+            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { MotorInsuranceOption, HomeInsuranceOption }, "What can I quote you for today?", "Hmmm...that's not a valid option.  Please choose an option from the list.", 3);
+        }
+
+        private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
+        {
+            try
             {
-                await context.PostAsync("What is your name?");
-                context.UserData.SetValue<bool>("GetName", true);
+                var optionSelected = await result;
+
+                switch (optionSelected)
+                {
+                    case MotorInsuranceOption:
+                        context.Call(new FormDialog<MotorQuote>(new MotorQuote(), MotorQuote.BuildQuickQuoteForm, FormOptions.PromptInStart), ResumeAfterOptionDialog);
+                        break;
+                    case HomeInsuranceOption:
+                        context.Call(new HomeDialog(), ResumeAfterOptionDialog);
+                        break;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await context.PostAsync(String.Format("Hi {0}, how can I help you today?", userName));
+                await context.PostAsync($"Ooops! Something went wrong.");
+
+                context.Wait(this.MessageReceivedAsync);
             }
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        private async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
         {
-            var activity = await result as Activity;
-            var userName = String.Empty;
-
-            context.UserData.TryGetValue<string>("Name", out userName);
-            context.UserData.TryGetValue<bool>("GetName", out bool getName);
-
-            if(getName)
+            try
             {
-                userName = activity.Text;
-                context.UserData.SetValue<string>("Name", userName);
-                context.UserData.SetValue<bool>("GetName", false);
+                var message = await result;
             }
+            catch (Exception ex)
+            {
+                await context.PostAsync($"Failed with message: {ex.Message}");
+            }
+            finally
+            {
+                context.Wait(this.MessageReceivedAsync);
+            }
+        }
 
-            await Respond(context);
-            context.Done(activity);
+        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        {
+            ShowQuoteOptions(context);
         }
     }
 }
