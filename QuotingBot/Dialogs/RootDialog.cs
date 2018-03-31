@@ -11,8 +11,8 @@ namespace QuotingBot.Dialogs
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        private const string MotorInsuranceOption = "Motor insurance";
-        private const string HomeInsuranceOption = "Home insurance";
+        private const string MotorInsuranceOption = "Motor insurance \U0001F698";
+        private const string HomeInsuranceOption = "Home insurance \U0001F3E1";
 
         public async Task StartAsync(IDialogContext context)
         {
@@ -22,7 +22,17 @@ namespace QuotingBot.Dialogs
 
         private void ShowQuoteOptions(IDialogContext context)
         {
-            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { MotorInsuranceOption, HomeInsuranceOption }, "What can I quote you for today?", "Hmmm...that's not a valid option.  Please choose an option from the list.", 3);
+            PromptDialog.Choice(
+                context, 
+                this.OnOptionSelected, 
+                new List<string>()
+                {
+                    MotorInsuranceOption,
+                    HomeInsuranceOption
+                }, 
+                "What can I quote you for today?",
+                "Hmmm...that's not a valid option.  Please choose an option from the list.",
+                3);
         }
 
         private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
