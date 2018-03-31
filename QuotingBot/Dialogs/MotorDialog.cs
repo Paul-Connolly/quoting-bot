@@ -12,6 +12,11 @@ namespace QuotingBot.Dialogs
     [Serializable]
     public class MotorDialog : IDialog<MotorQuote>
     {
+        public async Task StartAsync(IDialogContext context)
+        {
+            var quotationForm = new FormDialog<MotorQuote>(new MotorQuote(), this.GetMotorQuote, FormOptions.PromptInStart);
+            context.Call(quotationForm, Callback);
+        }
         private readonly BuildFormDelegate<MotorQuote> GetMotorQuote;
 
         public MotorDialog(BuildFormDelegate<MotorQuote> getMotorQuote) => GetMotorQuote = getMotorQuote;
@@ -21,10 +26,6 @@ namespace QuotingBot.Dialogs
             context.Done(context);
         }
 
-        public async Task StartAsync(IDialogContext context)
-        {
-            var quotationForm = new FormDialog<MotorQuote>(new MotorQuote(), this.GetMotorQuote, FormOptions.PromptInStart);
-            context.Call(quotationForm, Callback);
-        }
+        
     }
 }

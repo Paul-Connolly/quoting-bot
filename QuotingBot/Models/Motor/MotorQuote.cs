@@ -81,11 +81,7 @@ namespace QuotingBot.Models
                         return result;
                     }
                 )
-                .Confirm(async (state) =>
-                    {
-                        return new PromptAttribute("Is this your car?");
-                    }
-                )
+                .Confirm(async (state) => new PromptAttribute("Is this your car?"))
                 .AddRemainingFields()
                 .Confirm("Would you to request a quote using the following details?\n" +
                     "Car Registration: {VehicleRegistration}")
