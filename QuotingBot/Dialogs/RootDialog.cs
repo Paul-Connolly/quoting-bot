@@ -20,12 +20,6 @@ namespace QuotingBot.Dialogs
             context.Wait(this.MessageReceivedAsync);
         }
 
-        private async Task Respond(IDialogContext context)
-        {
-            await context.PostAsync("What can I quote you for today?");
-            ShowQuoteOptions(context);
-        }
-
         private void ShowQuoteOptions(IDialogContext context)
         {
             PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { MotorInsuranceOption, HomeInsuranceOption }, "What can I quote you for today?", "Hmmm...that's not a valid option.  Please choose an option from the list.", 3);
@@ -40,7 +34,7 @@ namespace QuotingBot.Dialogs
                 switch (optionSelected)
                 {
                     case MotorInsuranceOption:
-                        context.Call(new FormDialog<MotorQuote>(new MotorQuote(), MotorQuote.BuildQuickQuoteForm, FormOptions.PromptInStart), ResumeAfterOptionDialog);
+                        context.Call(new MotorDialog(), ResumeAfterOptionDialog);
                         break;
                     case HomeInsuranceOption:
                         context.Call(new HomeDialog(), ResumeAfterOptionDialog);

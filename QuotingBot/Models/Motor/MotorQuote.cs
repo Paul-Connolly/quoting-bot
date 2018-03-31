@@ -57,38 +57,38 @@ namespace QuotingBot.Models
         public string PrimaryContactNumber;
         public string EmailAddress;
 
-        public static IForm<MotorQuote> BuildQuickQuoteForm()
-        {
-            OnCompletionAsyncDelegate<MotorQuote> getQuote = async (context, state) =>
-            {
-                var quotes = motorService.GetQuickQuotesSpecified(
-                    RiskData: BuildIrishMQRiskInfo(state),
-                    EnableValidation: true, 
-                    TimeTravelDate: null, 
-                    MessageRequestInfo: BuildMessageRequestInfo());
-                await context.PostAsync("Getting your quotes!");
-            };
+        //public static IForm<MotorQuote> BuildQuickQuoteForm()
+        //{
+            //OnCompletionAsyncDelegate<MotorQuote> getQuote = async (context, state) =>
+            //{
+            //    var quotes = motorService.GetQuickQuotesSpecified(
+            //        RiskData: BuildIrishMQRiskInfo(state),
+            //        EnableValidation: true, 
+            //        TimeTravelDate: null, 
+            //        MessageRequestInfo: BuildMessageRequestInfo());
+            //    await context.PostAsync("Getting your quotes!");
+            //};
 
-            return new FormBuilder<MotorQuote>()
-                .Message("No problem!")
-                .Message("Let's get started \U0001F600")
-                .Field(nameof(VehicleRegistration),
-                    validate: async (state, value) =>
-                    {
-                        var result = new ValidateResult { IsValid = true };
-                        result.Value = value.ToString().ToUpper();
-                        result.Feedback = GetVehicle(value.ToString()).Description;
-                        return result;
-                    }
-                )
-                .Confirm(async (state) => new PromptAttribute("Is this your car?"))
-                .AddRemainingFields()
-                .Confirm("Would you to request a quote using the following details?\n" +
-                    "Car Registration: {VehicleRegistration}")
-                .Message("Going to get your quotes...")
-                .OnCompletion(getQuote)
-                .Build();
-        }
+            //return new FormBuilder<MotorQuote>()
+            //    //.Message("No problem!")
+            //    //.Message("Let's get started \U0001F600")
+            //    .Field(nameof(VehicleRegistration),
+            //        validate: async (state, value) =>
+            //        {
+            //            var result = new ValidateResult { IsValid = true };
+            //            result.Value = value.ToString().ToUpper();
+            //            result.Feedback = GetVehicle(value.ToString()).Description;
+            //            return result;
+            //        }
+            //    )
+            //    .Confirm(async (state) => new PromptAttribute("Is this your car?"))
+            //    .AddRemainingFields()
+            //    .Confirm("Would you to request a quote using the following details?\n" +
+            //        "Car Registration: {VehicleRegistration}")
+            //    .Message("Going to get your quotes...")
+            //    .OnCompletion(getQuote)
+            //    .Build();
+        //}
 
         public static Vehicle GetVehicle(string vehicleRegistration)
         {
@@ -132,7 +132,7 @@ namespace QuotingBot.Models
             return vehicle;
         }
 
-        private static IrishMQRiskInfo BuildIrishMQRiskInfo(MotorQuote state)
+        public static IrishMQRiskInfo BuildIrishMQRiskInfo(MotorQuote state)
         {
             var riskInfo = new IrishMQRiskInfo();
             riskInfo.Driver = new IrishDriverInfo[1];
@@ -180,7 +180,7 @@ namespace QuotingBot.Models
                     new IrishOccupationInfo
                     {
                         FullTimeEmployment = true,
-                        OccupationCode = "SSB",
+                        OccupationCode = "SBB",
                         EmployersBusiness = "120",
                         EmploymentType = "E"
                     }
@@ -364,7 +364,7 @@ namespace QuotingBot.Models
             return riskInfo;
         }
 
-        private static MessageRequestInfo BuildMessageRequestInfo()
+        public static MessageRequestInfo BuildMessageRequestInfo()
         {
             var messageRequestInfo = new MessageRequestInfo
             {
