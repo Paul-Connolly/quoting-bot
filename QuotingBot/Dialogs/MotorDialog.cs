@@ -7,6 +7,7 @@ using QuotingBot.Models.Home;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using QuotingBot.Models.Motor;
 using QuotingBot.RelayFullCycleMotorService;
 
 namespace QuotingBot.Dialogs

@@ -1,12 +1,8 @@
-﻿using Microsoft.Bot.Builder.FormFlow;
-using System;
+﻿using System;
+using Microsoft.Bot.Builder.FormFlow;
 using QuotingBot.RelayFullCycleMotorService;
-using System.Threading.Tasks;
-using System.Xml;
-using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Connector;
 
-namespace QuotingBot.Models
+namespace QuotingBot.Models.Motor
 {
     public enum LicenceTypes
     {
@@ -57,45 +53,12 @@ namespace QuotingBot.Models
         public string PrimaryContactNumber;
         public string EmailAddress;
 
-        //public static IForm<MotorQuote> BuildQuickQuoteForm()
-        //{
-            //OnCompletionAsyncDelegate<MotorQuote> getQuote = async (context, state) =>
-            //{
-            //    var quotes = motorService.GetQuickQuotesSpecified(
-            //        RiskData: BuildIrishMQRiskInfo(state),
-            //        EnableValidation: true, 
-            //        TimeTravelDate: null, 
-            //        MessageRequestInfo: BuildMessageRequestInfo());
-            //    await context.PostAsync("Getting your quotes!");
-            //};
-
-            //return new FormBuilder<MotorQuote>()
-            //    //.Message("No problem!")
-            //    //.Message("Let's get started \U0001F600")
-            //    .Field(nameof(VehicleRegistration),
-            //        validate: async (state, value) =>
-            //        {
-            //            var result = new ValidateResult { IsValid = true };
-            //            result.Value = value.ToString().ToUpper();
-            //            result.Feedback = GetVehicle(value.ToString()).Description;
-            //            return result;
-            //        }
-            //    )
-            //    .Confirm(async (state) => new PromptAttribute("Is this your car?"))
-            //    .AddRemainingFields()
-            //    .Confirm("Would you to request a quote using the following details?\n" +
-            //        "Car Registration: {VehicleRegistration}")
-            //    .Message("Going to get your quotes...")
-            //    .OnCompletion(getQuote)
-            //    .Build();
-        //}
-
         public static Vehicle GetVehicle(string vehicleRegistration)
         {
             var result = new ValidateResult();
             var vehicle = new Vehicle();
 
-            vehicle.ABICode = motorService.GetVehicleLookup(
+            vehicle.AbiCode = motorService.GetVehicleLookup(
                 vehicleRegistration,
                 string.Empty,
                 string.Empty,
@@ -110,16 +73,16 @@ namespace QuotingBot.Models
                 "relay1:0099",
                 VehicleLookup.Motor).ABICode;
 
-            vehicle = GetVehicleDetails(vehicle.ABICode);
+            vehicle = GetVehicleDetails(vehicle.AbiCode);
 
-            return vehicle = GetVehicleDetails(vehicle.ABICode);
+            return vehicle = GetVehicleDetails(vehicle.AbiCode);
         }
 
         private static Vehicle GetVehicleDetails(string ABICode)
         {
             var vehicle = new Vehicle();
             var vehicleLookupItem = motorService.GetVehicleDetailsABI(ABICode);
-            vehicle.ABICode = ABICode;
+            vehicle.AbiCode = ABICode;
             vehicle.Description = vehicleLookupItem.Description;
             vehicle.Manufacturer = vehicleLookupItem.Manufacturer;
             vehicle.Model = vehicleLookupItem.Model;

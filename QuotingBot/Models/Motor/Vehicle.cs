@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace QuotingBot.Models
+﻿namespace QuotingBot.Models.Motor
 {
     public class Vehicle
     {
@@ -15,6 +10,6 @@ namespace QuotingBot.Models
         public int EngineCapacity { get; set; }
         public string FuelType { get; set; }
         public string Description { get; set; }
-        public string ABICode { get; set; }
+        public string AbiCode { get; set; }
     }
 }
