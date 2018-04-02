@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
-using Microsoft.Bot.Connector;
+using QuotingBot.DAL.Quotes;
+using QuotingBot.DAL.Repository.Conversations;
+using QuotingBot.DAL.Repository.Errors;
 using QuotingBot.Models.Home;
 using QuotingBot.RelayHouseholdService;
 
@@ -44,6 +47,8 @@ namespace QuotingBot.Dialogs
 
             try
             {
+                var quoteRepository = new QuoteRepository();
+                var conversationRepository = new ConversationRepository();
                 var reply = context.MakeMessage();
 
                 var homeService = new Household();
@@ -60,11 +65,27 @@ namespace QuotingBot.Dialogs
                 reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                 reply.Attachments = GetQuoteThumbnails(quotes);
 
+                quoteRepository.StoreQuote
+                    (
+                        context.Activity.Conversation.Id,
+                        response.Quotes[0].RelayQuoteId,
+                        new JavaScriptSerializer().Serialize(quotes)
+                    );
+
                 await context.PostAsync(reply);
+
+                conversationRepository.StoreConversation
+                    (
+                        context.Activity.Conversation.Id,
+                        context.Activity.From.Id,
+                        DateTime.Now.ToString(),
+                        new JavaScriptSerializer().Serialize(context.ConversationData)
+                    );
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e);
+                var errorRepository = new ErrorRepository();
+                errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.InnerException.ToString());
                 throw;
             }
             finally
