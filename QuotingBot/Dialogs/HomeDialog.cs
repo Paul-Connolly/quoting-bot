@@ -46,7 +46,6 @@ namespace QuotingBot.Dialogs
                 var homeWebServiceRequest = HomeQuote.BuildHomeWebServiceRequest(state);
 
                 var response = homeService.GetQuotes(homeWebServiceRequest);
-                var errors = response.ErrorDetails;
                 var quotes = response.Quotes;
 
                 await context.PostAsync($"Here are your quotes...€{quotes[0].HousePremium}");

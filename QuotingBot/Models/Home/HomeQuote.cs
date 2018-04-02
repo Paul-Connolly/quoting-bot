@@ -41,6 +41,7 @@ namespace QuotingBot.Models.Home
         {
             var request = new HomeWebServiceRequest();
             request.PolicyHolders = new PolicyHolder[1];
+            request.Risks = new Risk[2];
 
             var policyHolder = new PolicyHolder
             {
@@ -76,8 +77,8 @@ namespace QuotingBot.Models.Home
                 }
             };
 
-            request.RelayNumber = "RE0844";
-            request.Password = "AWU/ZRg*BfY&amp;t/";
+            request.RelayNumber = "RE0930";
+            request.Password = "1IJ4^E?K]Syb>w";
             request.BrokerId = "5016";
             request.LoginId = "eQuote";
             request.BrokerName = "First Ireland Risk Management";
@@ -85,47 +86,99 @@ namespace QuotingBot.Models.Home
             request.BusinessProcess = BusinessProcess.NewBusiness;
             request.ProcessingType = InsurerConfirmationProcessingType.Standard;
 
-            request.Policy.EffectiveStartDate = DateTime.Now;
-            request.Policy.VoluntaryExcess = 0;
-            request.Policy.BrokerPolicyReference = "NOV17-Y8AONF";
-            request.Policy.CorrespondenceContact.Title = PersonTitle.Unknown;
-            request.Policy.CorrespondenceContact.DateOfBirth = new DateTime(0001, 01, 01, 00, 00, 00);
+            request.Policy = new Policy
+            {
+                EffectiveStartDate = DateTime.Now,
+                VoluntaryExcess = 0,
+                BrokerPolicyReference = "NOV17-Y8AONF",
+                CorrespondenceContact = new Contact()
+                {
+                    Title = PersonTitle.Unknown,
+                    DateOfBirth = new DateTime(0001, 01, 01, 00, 00, 00)
+                }
+            };
+
             request.PolicyHolders[0] = policyHolder;
-            request.Occupancy.ResidenceType = (RelayHouseholdService.ResidenceType)state.ResidenceType;
-            request.Occupancy.ProposerType = ProposerType.Unspecified;
-            request.Occupancy.YearsLivingAtAddress = 0;
-            request.Occupancy.NumberOfPayingGuests = 0;
-            request.Occupancy.SocialWelfareLet = false;
-            request.Occupancy.IsFurnished = false;
-            request.Occupancy.NormalDaytimeOccupancy = false;
-            request.Occupancy.NumberOfDaysUnoccupiedPerWeek = 0;
-            request.Occupancy.NumberOfTimesLetInAYear = 0;
-            request.Building.PropertyType = (RelayHouseholdService.PropertyType) state.PropertyType;
-            request.Building.PropertySubType = PropertySubType.DetachedHouse;
-            request.Building.ConstructionDate = new DateTime(2017, 01, 01, 00, 00, 00);
-            request.Building.ListedBuilding = false;
-            request.Building.RoofConstruction = RoofConstructionType.Standard;
-            request.Building.WallConstruction = WallConstructionType.Unknown;
-            request.Building.RoofPercentage = 0;
-            request.Building.NumberOfBedrooms = (int) state.NumberOfBedrooms;
-            request.Building.NumberOfBathrooms = 3;
-            request.Building.NumberOfSmokeDetectors = 2;
-            request.Building.Alarm = new Alarm { AlarmType = AlarmType.Unspecified };
-            request.Building.Locks = true;
-            request.Building.NeighbourhoodWatchInArea = true;
-            request.Building.Basement = false;
-            request.Building.HeatingType = HeatingType.Electric;
-            request.Building.BuildingSize = 0;
-            request.Building.BuildingSizeUnitOfMeasurement = UnitOfMeasurement.Unknown;
-            request.Building.GarageSize = 0;
-            request.Building.GarageSizeUnitOfMeasurement = UnitOfMeasurement.Unknown;
-            request.Building.FreeFromFlooding = true;
-            request.Building.FreeFromGroundHeave = true;
-            request.Building.FreeFromLandslip = true;
-            request.Building.FreeFromSubsidence = true;
-            request.Building.GoodRepair = true;
-            request.Building.SafeInstalled = false;
-            request.Building.UndertakeToMaintain = false;
+
+            request.Occupancy = new Occupancy
+            {
+                ResidenceType = RelayHouseholdService.ResidenceType.OwnerOccupied,
+                ProposerType = ProposerType.Unspecified,
+                YearsLivingAtAddress = 0,
+                NumberOfPayingGuests = 0,
+                SocialWelfareLet = false,
+                IsFurnished = false,
+                NormalDaytimeOccupancy = false,
+                NumberOfDaysUnoccupiedPerWeek = 0,
+                NumberOfTimesLetInAYear = 0
+            };
+
+            request.Building = new Building
+            {
+                PropertyType = RelayHouseholdService.PropertyType.DetachedHouse,
+                PropertySubType = PropertySubType.DetachedHouse,
+                ConstructionDate = new DateTime(2017, 01, 01, 00, 00, 00),
+                ListedBuilding = false,
+                RoofConstruction = RoofConstructionType.Standard,
+                WallConstruction = WallConstructionType.Unknown,
+                RoofPercentage = 0,
+                NumberOfBedrooms = (int)state.NumberOfBedrooms,
+                NumberOfBathrooms = 3,
+                NumberOfSmokeDetectors = 2,
+                Alarm = new Alarm { AlarmType = AlarmType.Unspecified },
+                Locks = true,
+                NeighbourhoodWatchInArea = true,
+                Basement = false,
+                HeatingType = HeatingType.Electric,
+                BuildingSize = 0,
+                BuildingSizeUnitOfMeasurement = UnitOfMeasurement.Unknown,
+                GarageSize = 0,
+                GarageSizeUnitOfMeasurement = UnitOfMeasurement.Unknown,
+                FreeFromFlooding = true,
+                FreeFromGroundHeave = true,
+                FreeFromLandslip = true,
+                FreeFromSubsidence = true,
+                GoodRepair = true,
+                SafeInstalled = false,
+                UndertakeToMaintain = false
+            };
+
+            request.RiskAddress = new Address
+            {
+                StreetName = state.FirstLineOfAddress,
+                Town = state.Town,
+                County = state.County,
+                FreeText1 = $"{state.FirstLineOfAddress}, {state.Town}, {state.County}",
+                AddressMatchResults = new AddressMatchResult[]
+                {
+                    new AddressMatchResult
+                    {
+                        ProvidedBy = AddressLookupProvider.Gamma,
+                        GeoCode = "40291613",
+                        MatchType = "region",
+                        Reference = "4IZJT7KP6X734AQK",
+                        MatchLevel = "700",
+                        IsFallbackResult = false,
+                        LookupResponse =
+                            "<![CDATA[&lt;location type='region' territory='SPIKE_GAMMA' score='99.99' xmlns='http://service.autoaddress.ie/'&gt;&lt;point x='275383.86' y='138100.57' coord-sys='ING' /&gt;&lt;info ecadId='1110030370' eircode=' Autoaddressid='4IZJT7KP6X734AQK' geover='Q117' geotype='L' georef='40291613' name='' text='Dranagh,Saint Mullins,Co. Carlow' addr1='Dranagh' addr2='Saint Mullins' addr3='Co. Carlow' matchLevel='700' matchResult'100' aa2MatchLevel='7' aa2MatchResult='300' smallarea='017020001' ecadSmallarea='48' /&gt;&lt;/location&gt;]]>"
+                    }
+                }
+            };
+
+            request.Risks[0] = new Risk
+            {
+                Group = RateBreakdownGroup.HouseStructure,
+                SumInsured = 300000
+            };
+            request.Risks[1] = new Risk
+            {
+                Group = RateBreakdownGroup.HouseContents,
+                SumInsured = 25000
+            };
+
+            request.HomeRequestSource = HomeRequestSource.eQuote;
+            request.QuoteReference = "NOV17-Y8AONF";
+            request.FullQuoteRequest = false;
 
             return request;
         }
