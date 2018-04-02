@@ -29,13 +29,16 @@ namespace QuotingBot.Dialogs
                 .Field(nameof(MotorQuote.VehicleRegistration),
                     validate: async (state, value) =>
                     {
-                        var result = new ValidateResult { IsValid = true };
-                        result.Value = value.ToString().ToUpper();
-                        result.Feedback = MotorQuote.GetVehicle(value.ToString()).Description;
+                        var result = new ValidateResult
+                        {
+                            IsValid = true,
+                            Value = value.ToString().ToUpper(),
+                            Feedback = MotorQuote.GetVehicle(value.ToString()).Description
+                        };
                         return result;
                     }
                 )
-                .Confirm(async (state) => new PromptAttribute("Is this your car?"))
+                .Confirm(generateMessage: async (state) => new PromptAttribute("Is this your car?"))
                 .AddRemainingFields()
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Car Registration: {VehicleRegistration}")

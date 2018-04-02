@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Bot.Builder.FormFlow;
 using QuotingBot.RelayFullCycleMotorService;
 
 namespace QuotingBot.Models.Motor
@@ -55,7 +54,6 @@ namespace QuotingBot.Models.Motor
 
         public static Vehicle GetVehicle(string vehicleRegistration)
         {
-            var result = new ValidateResult();
             var vehicle = new Vehicle();
 
             vehicle.AbiCode = motorService.GetVehicleLookup(
@@ -75,7 +73,7 @@ namespace QuotingBot.Models.Motor
 
             vehicle = GetVehicleDetails(vehicle.AbiCode);
 
-            return vehicle = GetVehicleDetails(vehicle.AbiCode);
+            return vehicle;
         }
 
         private static Vehicle GetVehicleDetails(string ABICode)

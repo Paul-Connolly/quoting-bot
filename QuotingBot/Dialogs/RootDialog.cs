@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.FormFlow;
-using Microsoft.Bot.Connector;
-using QuotingBot.Models;
 
 namespace QuotingBot.Dialogs
 {
     [Serializable]
-    public class RootDialog : IDialog<object>
+    public sealed class RootDialog : IDialog<object>
     {
         private const string MotorInsuranceOption = "Motor insurance \U0001F698";
         private const string HomeInsuranceOption = "Home insurance \U0001F3E1";
@@ -17,22 +14,19 @@ namespace QuotingBot.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Hi, I'm Ava - your friendly quoting bot!");
-            context.Wait(this.MessageReceivedAsync);
+            context.Wait(MessageReceivedAsync);
         }
 
         private void ShowQuoteOptions(IDialogContext context)
         {
-            PromptDialog.Choice(
+            PromptDialog.Choice
+            (
                 context, 
-                this.OnOptionSelected, 
-                new List<string>()
-                {
-                    MotorInsuranceOption,
-                    HomeInsuranceOption
-                }, 
-                "What can I quote you for today?",
-                "Hmmm...that's not a valid option.  Please choose an option from the list.",
-                3);
+                OnOptionSelected, 
+                new List<string> { MotorInsuranceOption, HomeInsuranceOption }, 
+                "What can I get you a quote for today?",
+                "Hmmm...that's not a valid option.  Please choose an option from the list."
+            );
         }
 
         private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -51,11 +45,11 @@ namespace QuotingBot.Dialogs
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await context.PostAsync($"Ooops! Something went wrong.");
+                await context.PostAsync($"Oops! Something went wrong.");
 
-                context.Wait(this.MessageReceivedAsync);
+                context.Wait(MessageReceivedAsync);
             }
         }
 
@@ -71,11 +65,11 @@ namespace QuotingBot.Dialogs
             }
             finally
             {
-                context.Wait(this.MessageReceivedAsync);
+                context.Wait(MessageReceivedAsync);
             }
         }
 
-        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             ShowQuoteOptions(context);
         }

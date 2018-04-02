@@ -1,5 +1,4 @@
 ﻿using System;
-using QuotingBot.RelayFullCycleMotorService;
 using QuotingBot.RelayHouseholdService;
 
 namespace QuotingBot.Models.Home
@@ -39,9 +38,11 @@ namespace QuotingBot.Models.Home
 
         public static HomeWebServiceRequest BuildHomeWebServiceRequest(HomeQuote state)
         {
-            var request = new HomeWebServiceRequest();
-            request.PolicyHolders = new PolicyHolder[1];
-            request.Risks = new Risk[2];
+            var request = new HomeWebServiceRequest
+            {
+                PolicyHolders = new PolicyHolder[1],
+                Risks = new Risk[2]
+            };
 
             var policyHolder = new PolicyHolder
             {
