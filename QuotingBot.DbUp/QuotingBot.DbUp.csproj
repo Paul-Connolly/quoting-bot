@@ -52,7 +52,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Upgrades\00.00.00.2001.AddQuotesAndErrorsTables.sql" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\00.00.00.1001.BaselineSchema.sql" />
   </ItemGroup>
