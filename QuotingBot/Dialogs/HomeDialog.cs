@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
+using Microsoft.Bot.Connector;
 using QuotingBot.Models.Home;
 using QuotingBot.RelayHouseholdService;
 
@@ -42,13 +44,23 @@ namespace QuotingBot.Dialogs
 
             try
             {
+                var reply = context.MakeMessage();
+
                 var homeService = new Household();
                 var homeWebServiceRequest = HomeQuote.BuildHomeWebServiceRequest(state);
 
+                var quotes = new List<HomeQuoteWebServiceResult>();
+                
                 var response = homeService.GetQuotes(homeWebServiceRequest);
-                var quotes = response.Quotes;
+                foreach(var quote in response.Quotes)
+                {
+                    quotes.Add(quote);
+                }
 
-                await context.PostAsync($"Here are your quotes...€{quotes[0].HousePremium}");
+                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                reply.Attachments = GetQuoteThumbnails(quotes);
+
+                await context.PostAsync(reply);
             }
             catch (Exception e)
             {
@@ -59,6 +71,38 @@ namespace QuotingBot.Dialogs
             {
                 context.Done(state);
             }
+        }
+
+        private static IList<Attachment> GetQuoteThumbnails(List<HomeQuoteWebServiceResult> results)
+        {
+            var cards = new List<Attachment>();
+
+            foreach (var result in results)
+            {
+                cards.Add(
+                    GetThumbnail(
+                        result.InsurerName,
+                        result.SchemeName,
+                        result.NetPremium.ToString(),
+                        null,
+                        null
+                    )
+                );
+            }
+
+            return cards;
+        }
+
+        private static Attachment GetThumbnail(string title, string subtitle, string text, CardImage cardImage, CardAction cardAction)
+        {
+            var thumbnail = new ThumbnailCard
+            {
+                Title = title,
+                Subtitle = subtitle,
+                Text = '$' + text
+            };
+
+            return thumbnail.ToAttachment();
         }
     }
 }

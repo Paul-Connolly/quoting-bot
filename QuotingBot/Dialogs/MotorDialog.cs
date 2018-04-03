@@ -3,6 +3,8 @@ using Microsoft.Bot.Builder.FormFlow;
 using System;
 using System.Threading.Tasks;
 using QuotingBot.Models.Motor;
+using Microsoft.Bot.Connector;
+using System.Collections.Generic;
 
 namespace QuotingBot.Dialogs
 {
@@ -49,6 +51,7 @@ namespace QuotingBot.Dialogs
         private async Task ResumeAfterMotorQuoteFormDialog(IDialogContext context, IAwaitable<MotorQuote> result)
         {
             var state = await result;
+            var reply = context.MakeMessage();
 
             try
             {
@@ -57,9 +60,12 @@ namespace QuotingBot.Dialogs
                 var riskData = MotorQuote.BuildIrishMQRiskInfo(state);
                 var messageRequestInfo = MotorQuote.BuildMessageRequestInfo();
                 
-                var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 5, true, null, messageRequestInfo);
+                var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 5, true, null, messageRequestInfo).Quotations;
 
-                await context.PostAsync($"Here are your quotes...€{quotes.Quotations[0].Premium.TotalPremium}");
+                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                reply.Attachments = GetQuoteThumbnails(quotes);
+
+                await context.PostAsync(reply);
             }
             catch (Exception e)
             {
@@ -70,6 +76,37 @@ namespace QuotingBot.Dialogs
             {
                 context.Done(state);
             }
+        }
+
+        private IList<Attachment> GetQuoteThumbnails(RelayFullCycleMotorService.IrishMQResultsBreakdown[] breakdowns)
+        {
+            var cards = new List<Attachment>();
+
+            foreach(var breakdown in breakdowns)
+            {
+                cards.Add(
+                    GetThumbnail(
+                        breakdown.Premium.SchemeName,
+                        breakdown.Premium.TotalPremium.ToString(),
+                        null,
+                        null,
+                        null
+                    )
+                );
+            }
+
+            return cards;
+        }
+
+        private static Attachment GetThumbnail(string title, string subtitle, string text, CardImage cardImage, CardAction cardAction)
+        {
+            var thumbnail = new ThumbnailCard
+            {
+                Title = title,
+                Subtitle = '$' + subtitle
+            };
+
+            return thumbnail.ToAttachment();
         }
     }
 }
