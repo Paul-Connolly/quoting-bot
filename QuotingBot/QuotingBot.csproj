@@ -193,6 +193,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logging\Error.cs" />
     <Compile Include="Models\Home\HomeQuote.cs" />
     <Compile Include="Models\Motor\MotorQuote.cs" />
     <Compile Include="Models\Motor\Vehicle.cs" />
@@ -271,6 +272,12 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Bot_Application_RelayHousehold_Household</CachedSettingsPropName>
     </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuotingBot.DAL\QuotingBot.DAL.csproj">
+      <Project>{9f2dfa95-d93f-41ee-97cc-a7c55b25dbc5}</Project>
+      <Name>QuotingBot.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

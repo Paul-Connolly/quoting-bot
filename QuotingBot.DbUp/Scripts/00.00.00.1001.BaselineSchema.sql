@@ -32,12 +32,11 @@ GO
 
 CREATE TABLE [dbo].[Conversations]
 (
-	[ConversationId] [uniqueidentifier] NOT NULL,
-	[UserId] [uniqueidentifier] NOT NULL,
+	[ConversationId] [nvarchar](MAX) NOT NULL,
+	[UserId] [nvarchar](MAX) NOT NULL,
 	[ConversationDate] [varchar](30) NOT NULL,
 	[QuoteId] [varchar](12) NULL,
 	[ConversationLog] [varchar](MAX) NULL
-	CONSTRAINT [PK_ConversationId] PRIMARY KEY CLUSTERED ([ConversationId] ASC)
 );
 GO
 
@@ -51,11 +50,11 @@ PRINT N'Creating Procedure usp_Add_Conversation...';
 GO
 
 CREATE PROCEDURE usp_Add_Conversation
-	@ConversationId uniqueidentifier,
-	@UserId uniqueidentifier,
-	@ConversationDate varchar(30),
-	@QuoteId varchar(12),
-	@ConversationLog varchar(MAX)
+	@ConversationId nvarchar(MAX),
+	@UserId nvarchar(MAX),
+	@ConversationDate nvarchar(30),
+	@QuoteId nvarchar(12),
+	@ConversationLog nvarchar(MAX)
 WITH EXECUTE AS OWNER
 AS
 BEGIN
@@ -73,8 +72,8 @@ PRINT N'Creating Procedure usp_Update_Conversation...';
 GO
 
 CREATE PROCEDURE usp_Update_Conversation
-	@ConversationId uniqueidentifier,
-	@ConversationLog varchar(MAX)
+	@ConversationId nvarchar(MAX),
+	@ConversationLog nvarchar(MAX)
 WITH EXECUTE AS OWNER
 AS
 BEGIN

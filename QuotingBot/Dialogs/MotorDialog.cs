@@ -3,6 +3,9 @@ using Microsoft.Bot.Builder.FormFlow;
 using System;
 using System.Threading.Tasks;
 using QuotingBot.Models.Motor;
+using System.Web.Script.Serialization;
+using QuotingBot.DAL.Quotes;
+using QuotingBot.DAL.Repository.Errors;
 
 namespace QuotingBot.Dialogs
 {
@@ -52,18 +55,22 @@ namespace QuotingBot.Dialogs
 
             try
             {
+                var quoteRepository = new QuoteRepository();
                 var motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
                 
                 var riskData = MotorQuote.BuildIrishMQRiskInfo(state);
                 var messageRequestInfo = MotorQuote.BuildMessageRequestInfo();
                 
                 var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 5, true, null, messageRequestInfo);
+                
+                quoteRepository.StoreQuote(context.Activity.Conversation.Id, quotes.TransactionID, new JavaScriptSerializer().Serialize(quotes.Quotations[0]));
 
                 await context.PostAsync($"Here are your quotes...€{quotes.Quotations[0].Premium.TotalPremium}");
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e);
+                var errorRepository = new ErrorRepository();
+                errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.InnerException.ToString());
                 throw;
             }
             finally
