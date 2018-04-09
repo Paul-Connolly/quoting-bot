@@ -64,12 +64,12 @@ namespace QuotingBot.Dialogs
                 var riskData = MotorQuote.BuildIrishMQRiskInfo(state);
                 var messageRequestInfo = MotorQuote.BuildMessageRequestInfo();
                 
-                var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 5, true, null, messageRequestInfo);
+                var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 100, true, null, messageRequestInfo);
                 
                 quoteRepository.StoreQuote(context.Activity.Conversation.Id, quotes.TransactionID, new JavaScriptSerializer().Serialize(quotes.Quotations[0]));
 
                 reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                reply.Attachments = GetQuoteThumbnails(quotes);
+                reply.Attachments = GetQuoteThumbnails(quotes.Quotations);
 
                 await context.PostAsync(reply);
             }

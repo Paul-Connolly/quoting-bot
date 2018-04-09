@@ -10,11 +10,11 @@ namespace QuotingBot.DAL.Repository.Errors
     {
         public ErrorRepository() { }
 
-        public void LogError(string conversationId, string userId, string conversationDate, string conversationLog, string errorMessage)
+        public async void LogError(string conversationId, string userId, string conversationDate, string conversationLog, string errorMessage)
         {
             using (var connection = new SqlConnection("Server=DESKTOP-HL69CK9\\PCONNOLLY; Database=QuotingBot; Trusted_connection=true"))
             {
-                connection.OpenAsync();
+                await connection.OpenAsync();
                 var quote = new Error
                 (
                     conversationId,
@@ -24,7 +24,7 @@ namespace QuotingBot.DAL.Repository.Errors
                     errorMessage
                 );
 
-                connection.ExecuteAsync("usp_Add_Error", quote, null, null, CommandType.StoredProcedure);
+                await connection.ExecuteAsync("usp_Add_Error", quote, null, null, CommandType.StoredProcedure);
             }
         }
     }

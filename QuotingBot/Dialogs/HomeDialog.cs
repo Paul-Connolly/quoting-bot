@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
+using Microsoft.Bot.Connector;
 using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.DAL.Repository.Errors;
@@ -79,7 +80,7 @@ namespace QuotingBot.Dialogs
                         context.Activity.Conversation.Id,
                         context.Activity.From.Id,
                         DateTime.Now.ToString(),
-                        new JavaScriptSerializer().Serialize(context.ConversationData)
+                        new JavaScriptSerializer().Serialize(context)
                     );
             }
             catch (Exception exception)
