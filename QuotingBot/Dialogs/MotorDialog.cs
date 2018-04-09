@@ -34,11 +34,12 @@ namespace QuotingBot.Dialogs
                 .Field(nameof(MotorQuote.VehicleRegistration),
                     validate: async (state, value) =>
                     {
+                        state.Vehicle = MotorQuote.GetVehicle(value.ToString());
                         var result = new ValidateResult
                         {
                             IsValid = true,
                             Value = value.ToString().ToUpper(),
-                            Feedback = MotorQuote.GetVehicle(value.ToString()).Description
+                            Feedback = state.Vehicle.Description
                         };
                         return result;
                     }

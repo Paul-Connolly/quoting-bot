@@ -51,6 +51,7 @@ namespace QuotingBot.Models.Motor
         public NoClaimsDiscount? NoClaimsDiscount;
         public string PrimaryContactNumber;
         public string EmailAddress;
+        public Vehicle Vehicle = new Vehicle();
 
         public static Vehicle GetVehicle(string vehicleRegistration)
         {
@@ -128,7 +129,7 @@ namespace QuotingBot.Models.Motor
                 PermResident = true,
                 NonDrinker = false,
                 TempAdditionalDriver = false,
-                DateOfBirth = new DateTime(1979, 06, 04, 02, 00, 00),
+                DateOfBirth = (DateTime)state.DateOfBirth,
                 IrelandResidencyDate = new DateTime(2000, 04, 11, 02, 00, 00),
                 IrelandLicenceDate = new DateTime(2014, 08, 28, 02, 00, 00),
                 NameddriverNCDClaimedYears = 6,
@@ -230,7 +231,7 @@ namespace QuotingBot.Models.Motor
             riskInfo.Vehicle[0] = new IrishVehicleInfo
             {
                 PRN = 1,
-                Value = 4000,
+                Value = (int)state.VehicleValue,
                 AnnualMilage = 10000,
                 BusinessMileage = 0,
                 PleasureMileage = 10000,
@@ -240,18 +241,18 @@ namespace QuotingBot.Models.Motor
                 NoOfSeats = 5,
                 ManufacturedYear = 2005,
                 FirstRegdYear = 2005,
-                ModelCode = "95012085",
-                ModelName = "AUDI A3 1.6 ATTRACTION SPORTPACK",
+                ModelCode = state.Vehicle.AbiCode,
+                ModelName = state.Vehicle.Description,
                 KeptAt = "HA",
                 AreaKeptAt = "DX11",
-                CubicCapacity = "1595",
+                CubicCapacity = state.Vehicle.EngineCapacity.ToString(),
                 BodyType = "5",
                 OvernightLocation = "2",
                 AreaRating = "DX11",
                 Owner = "1",
-                RegistrationNo = "05OY3466",
+                RegistrationNo = state.VehicleRegistration,
                 RegisteredKeeper = "1",
-                DateManufactured = new DateTime(2005, 12, 15, 02, 00, 00),
+                DateManufactured = new DateTime(state.Vehicle.YearOfFirstManufacture, 01, 01, 02, 00, 00),
                 DateFirstRegistered = new DateTime(2005, 12, 15, 02, 00, 00),
                 DatePurchased = new DateTime(2017, 05, 01, 02, 00, 00),
                 ModifiedInd = false,

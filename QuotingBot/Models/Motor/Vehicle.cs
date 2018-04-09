@@ -1,5 +1,8 @@
-﻿namespace QuotingBot.Models.Motor
+﻿using System;
+
+namespace QuotingBot.Models.Motor
 {
+    [Serializable]
     public class Vehicle
     {
         public string Manufacturer { get; set; }
