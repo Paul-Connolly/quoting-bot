@@ -295,7 +295,7 @@ namespace QuotingBot.Models.Motor
                 Period = "12",
                 CertificateNumber = "0",
                 StartTime = "000100",
-                StartDate = new DateTime(2017, 07, 10, 00, 00, 00),
+                StartDate = (DateTime)state.EffectiveDate,
                 ExpiryDate = new DateTime(2018, 07, 09, 01, 00, 00),
                 RequiredDrivers = "5",
                 VehicleRefNo = 1,
