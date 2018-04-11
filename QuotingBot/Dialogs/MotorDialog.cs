@@ -8,12 +8,14 @@ using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Errors;
 using Microsoft.Bot.Connector;
 using System.Collections.Generic;
+using QuotingBot.Helpers;
 
 namespace QuotingBot.Dialogs
 {
     [Serializable]
     public class MotorDialog : IDialog<MotorQuote>
     {
+        private Validation validation = new Validation();
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No problem!");
@@ -34,17 +36,48 @@ namespace QuotingBot.Dialogs
                 .Field(nameof(MotorQuote.VehicleRegistration),
                     validate: async (state, value) =>
                     {
+                        var result = new ValidateResult();
                         state.Vehicle = MotorQuote.GetVehicle(value.ToString());
-                        var result = new ValidateResult
+
+                        if (!string.IsNullOrEmpty(state.Vehicle.Description))
                         {
-                            IsValid = true,
-                            Value = value.ToString().ToUpper(),
-                            Feedback = state.Vehicle.Description
-                        };
+                            result.IsValid = true;
+                            result.Value = value.ToString().ToUpper();
+                            result.Feedback = state.Vehicle.Description;
+                        }
+                        else
+                        {
+                            result.IsValid = false;
+                            result.Feedback = "Hmmm...I couldn't find a match for that registration \U0001F914 Please try again";
+                        }
                         return result;
                     }
                 )
                 .Confirm(generateMessage: async (state) => new PromptAttribute("Is this your car?"))
+                .Field(nameof(MotorQuote.AreaVehicleIsKept),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateAreaVehicleIsKept(value);
+                    }
+                )
+                .Field(nameof(MotorQuote.VehicleValue),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateVehicleValue(value);
+                    }
+                )
+                .Field(nameof(MotorQuote.FirstName),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateFirstName(value);
+                    }
+                )
+                .Field(nameof(MotorQuote.LastName),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateLastName(value);
+                    }
+                )
                 .AddRemainingFields()
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Car Registration: {VehicleRegistration}")

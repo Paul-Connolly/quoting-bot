@@ -1,4 +1,6 @@
 ﻿using System;
+using QuotingBot.DAL.Repository.Errors;
+using QuotingBot.Logging;
 using QuotingBot.RelayFullCycleMotorService;
 
 namespace QuotingBot.Models.Motor
@@ -39,9 +41,10 @@ namespace QuotingBot.Models.Motor
     [Serializable]
     public class MotorQuote
     {
+        public static Error errorLogging = new Error();
         public static RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
         public string VehicleRegistration;
-        public int? VehicleValue;
+        public string VehicleValue;
         public string AreaVehicleIsKept;
         public DateTime? EffectiveDate;
         public string FirstName;
@@ -56,23 +59,33 @@ namespace QuotingBot.Models.Motor
         public static Vehicle GetVehicle(string vehicleRegistration)
         {
             var vehicle = new Vehicle();
+            try
+            {
+                vehicle.AbiCode = motorService.GetVehicleLookup(
+                    vehicleRegistration,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    "RE0098",
+                    "relay1:0099",
+                    VehicleLookup.Motor).ABICode;
 
-            vehicle.AbiCode = motorService.GetVehicleLookup(
-                vehicleRegistration,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                "RE0098",
-                "relay1:0099",
-                VehicleLookup.Motor).ABICode;
-
-            vehicle = GetVehicleDetails(vehicle.AbiCode);
+                if (!string.IsNullOrEmpty(vehicle.AbiCode))
+                {
+                    vehicle = GetVehicleDetails(vehicle.AbiCode);
+                }
+            }
+            catch (Exception exception)
+            {
+                errorLogging.Log(DateTime.Now.ToString(), exception.InnerException.ToString());
+                throw;
+            }
 
             return vehicle;
         }
@@ -80,16 +93,25 @@ namespace QuotingBot.Models.Motor
         private static Vehicle GetVehicleDetails(string ABICode)
         {
             var vehicle = new Vehicle();
-            var vehicleLookupItem = motorService.GetVehicleDetailsABI(ABICode);
-            vehicle.AbiCode = ABICode;
-            vehicle.Description = vehicleLookupItem.Description;
-            vehicle.Manufacturer = vehicleLookupItem.Manufacturer;
-            vehicle.Model = vehicleLookupItem.Model;
-            vehicle.BodyType = vehicleLookupItem.BodyType;
-            vehicle.EngineCapacity = vehicleLookupItem.EngineCapacity;
-            vehicle.NumberOfDoors = vehicleLookupItem.NumberDoors;
-            vehicle.FuelType = vehicleLookupItem.FuelType;
-            vehicle.YearOfFirstManufacture = vehicleLookupItem.YearOfFirstManufacture;
+
+            try
+            {
+                var vehicleLookupItem = motorService.GetVehicleDetailsABI(ABICode);
+                vehicle.AbiCode = ABICode;
+                vehicle.Description = vehicleLookupItem.Description;
+                vehicle.Manufacturer = vehicleLookupItem.Manufacturer;
+                vehicle.Model = vehicleLookupItem.Model;
+                vehicle.BodyType = vehicleLookupItem.BodyType;
+                vehicle.EngineCapacity = vehicleLookupItem.EngineCapacity;
+                vehicle.NumberOfDoors = vehicleLookupItem.NumberDoors;
+                vehicle.FuelType = vehicleLookupItem.FuelType;
+                vehicle.YearOfFirstManufacture = vehicleLookupItem.YearOfFirstManufacture;
+            }
+            catch(Exception exception)
+            {
+                errorLogging.Log(DateTime.Now.ToString(), exception.InnerException.ToString());
+                throw;
+            }
 
             return vehicle;
         }
@@ -231,7 +253,7 @@ namespace QuotingBot.Models.Motor
             riskInfo.Vehicle[0] = new IrishVehicleInfo
             {
                 PRN = 1,
-                Value = (int)state.VehicleValue,
+                Value = Convert.ToInt32(state.VehicleValue),
                 AnnualMilage = 10000,
                 BusinessMileage = 0,
                 PleasureMileage = 10000,

@@ -193,6 +193,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Formatter.cs" />
+    <Compile Include="Helpers\Validation.cs" />
     <Compile Include="Logging\Error.cs" />
     <Compile Include="Models\Home\HomeQuote.cs" />
     <Compile Include="Models\Motor\MotorQuote.cs" />

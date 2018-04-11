@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using QuotingBot.DAL.Repository.Errors;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,6 +29,12 @@ namespace QuotingBot.Logging
 
                 connection.ExecuteAsync("usp_Add_Error", quote, null, null, CommandType.StoredProcedure);
             }
+        }
+
+        public void Log(string date, string errorMessage)
+        {
+            var errorRepository = new ErrorRepository();
+            errorRepository.LogError(DateTime.Now.ToString(), errorMessage);
         }
     }
 }
