@@ -70,5 +70,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Upgrades\00.00.00.2005.AlterConversationConversationLogColoumn.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Upgrades\00.00.00.2006.AlterErrorToAllowNulls.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

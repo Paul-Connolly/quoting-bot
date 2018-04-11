@@ -190,9 +190,14 @@
     <Compile Include="Dialogs\HomeDialog.cs" />
     <Compile Include="Dialogs\MotorDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Enums\LicenceType.cs" />
+    <Compile Include="Enums\NoClaimsDiscount.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Enums\EnumConverters.cs" />
+    <Compile Include="Helpers\Formatter.cs" />
+    <Compile Include="Helpers\Validation.cs" />
     <Compile Include="Logging\Error.cs" />
     <Compile Include="Models\Home\HomeQuote.cs" />
     <Compile Include="Models\Motor\MotorQuote.cs" />

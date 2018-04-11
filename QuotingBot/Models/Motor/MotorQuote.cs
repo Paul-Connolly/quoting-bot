@@ -1,53 +1,23 @@
 ﻿using System;
+using QuotingBot.Enums;
+using QuotingBot.Logging;
 using QuotingBot.RelayFullCycleMotorService;
 
 namespace QuotingBot.Models.Motor
 {
-    public enum LicenceTypes
-    {
-        FullIrish,
-        ProvisionalIrish,
-        FullEU,
-        FullUK,
-        Foreign,
-        InternationalLicence,
-        LearnerPermit
-        // value expected in XML request
-        // <option value = "C" > Full Irish</option>
-        //<option value = "B" > Provisional Irish</option>
-        // <option value = "F" > Full EU</option>
-        // <option value = "D" > Full UK</option>
-        // <option value = "I" > Foreign </ option >
-        // <option value = "N" > International Licence</option>
-        // <option value = "G" > Learner Permit</option>
-
-    }
-    public enum NoClaimsDiscount
-    {
-        One,
-        Two,
-        Three,
-        Four,
-        Five,
-        Six,
-        Seven,
-        Eight,
-        Nine,
-        OverNine
-    }
-
     [Serializable]
     public class MotorQuote
     {
+        public static Error errorLogging = new Error();
         public static RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
+        public static EnumConverters enumConverters = new EnumConverters();
         public string VehicleRegistration;
-        public int? VehicleValue;
+        public string VehicleValue;
         public string AreaVehicleIsKept;
-        public DateTime? EffectiveDate;
         public string FirstName;
         public string LastName;
-        public DateTime? DateOfBirth;
-        public LicenceTypes? LicenceType;
+        public string DateOfBirth;
+        public LicenceType? LicenceType;
         public NoClaimsDiscount? NoClaimsDiscount;
         public string PrimaryContactNumber;
         public string EmailAddress;
@@ -56,23 +26,33 @@ namespace QuotingBot.Models.Motor
         public static Vehicle GetVehicle(string vehicleRegistration)
         {
             var vehicle = new Vehicle();
+            try
+            {
+                vehicle.AbiCode = motorService.GetVehicleLookup(
+                    vehicleRegistration,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    "RE0098",
+                    "relay1:0099",
+                    VehicleLookup.Motor).ABICode;
 
-            vehicle.AbiCode = motorService.GetVehicleLookup(
-                vehicleRegistration,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                string.Empty,
-                "RE0098",
-                "relay1:0099",
-                VehicleLookup.Motor).ABICode;
-
-            vehicle = GetVehicleDetails(vehicle.AbiCode);
+                if (!string.IsNullOrEmpty(vehicle.AbiCode))
+                {
+                    vehicle = GetVehicleDetails(vehicle.AbiCode);
+                }
+            }
+            catch (Exception exception)
+            {
+                errorLogging.Log(DateTime.Now.ToString(), exception.InnerException.ToString());
+                throw;
+            }
 
             return vehicle;
         }
@@ -80,16 +60,25 @@ namespace QuotingBot.Models.Motor
         private static Vehicle GetVehicleDetails(string ABICode)
         {
             var vehicle = new Vehicle();
-            var vehicleLookupItem = motorService.GetVehicleDetailsABI(ABICode);
-            vehicle.AbiCode = ABICode;
-            vehicle.Description = vehicleLookupItem.Description;
-            vehicle.Manufacturer = vehicleLookupItem.Manufacturer;
-            vehicle.Model = vehicleLookupItem.Model;
-            vehicle.BodyType = vehicleLookupItem.BodyType;
-            vehicle.EngineCapacity = vehicleLookupItem.EngineCapacity;
-            vehicle.NumberOfDoors = vehicleLookupItem.NumberDoors;
-            vehicle.FuelType = vehicleLookupItem.FuelType;
-            vehicle.YearOfFirstManufacture = vehicleLookupItem.YearOfFirstManufacture;
+
+            try
+            {
+                var vehicleLookupItem = motorService.GetVehicleDetailsABI(ABICode);
+                vehicle.AbiCode = ABICode;
+                vehicle.Description = vehicleLookupItem.Description;
+                vehicle.Manufacturer = vehicleLookupItem.Manufacturer;
+                vehicle.Model = vehicleLookupItem.Model;
+                vehicle.BodyType = vehicleLookupItem.BodyType;
+                vehicle.EngineCapacity = vehicleLookupItem.EngineCapacity;
+                vehicle.NumberOfDoors = vehicleLookupItem.NumberDoors;
+                vehicle.FuelType = vehicleLookupItem.FuelType;
+                vehicle.YearOfFirstManufacture = vehicleLookupItem.YearOfFirstManufacture;
+            }
+            catch(Exception exception)
+            {
+                errorLogging.Log(DateTime.Now.ToString(), exception.InnerException.ToString());
+                throw;
+            }
 
             return vehicle;
         }
@@ -111,7 +100,7 @@ namespace QuotingBot.Models.Motor
                 Surname = state.LastName,
                 Sex = "M",
                 MaritalStatus = "M",
-                LicenceType = "B",
+                LicenceType = enumConverters.ConvertLicenceType(state.LicenceType),
                 LicenceCountry = "IE",
                 ProsecutionPending = false,
                 LicenceRestrictionInd = false,
@@ -129,7 +118,7 @@ namespace QuotingBot.Models.Motor
                 PermResident = true,
                 NonDrinker = false,
                 TempAdditionalDriver = false,
-                DateOfBirth = (DateTime)state.DateOfBirth,
+                DateOfBirth = Convert.ToDateTime(state.DateOfBirth),
                 IrelandResidencyDate = new DateTime(2000, 04, 11, 02, 00, 00),
                 IrelandLicenceDate = new DateTime(2014, 08, 28, 02, 00, 00),
                 NameddriverNCDClaimedYears = 6,
@@ -167,7 +156,7 @@ namespace QuotingBot.Models.Motor
                 SurName = state.LastName,
                 Sex = "M",
                 MaritalStatus = "M",
-                DateOfBirth = (DateTime)state.DateOfBirth,
+                DateOfBirth = Convert.ToDateTime(state.DateOfBirth),
                 Address = new IrishAddressInfo
                 {
                     Line1 = "1 Main Street",
@@ -192,7 +181,7 @@ namespace QuotingBot.Models.Motor
                 },
                 NCD = new IrishNCDInfo
                 {
-                    ClaimedYearsEarned = 5,
+                    ClaimedYearsEarned = enumConverters.ConvertNoClaimsDiscount(state.NoClaimsDiscount),
                     DrivingExperienceYears = 0,
                     ClaimedCountry = "IE",
                     ClaimedInsurer = "029",
@@ -231,7 +220,7 @@ namespace QuotingBot.Models.Motor
             riskInfo.Vehicle[0] = new IrishVehicleInfo
             {
                 PRN = 1,
-                Value = (int)state.VehicleValue,
+                Value = Convert.ToInt32(state.VehicleValue),
                 AnnualMilage = 10000,
                 BusinessMileage = 0,
                 PleasureMileage = 10000,
@@ -295,8 +284,8 @@ namespace QuotingBot.Models.Motor
                 Period = "12",
                 CertificateNumber = "0",
                 StartTime = "000100",
-                StartDate = (DateTime)state.EffectiveDate,
-                ExpiryDate = new DateTime(2018, 07, 09, 01, 00, 00),
+                StartDate = DateTime.Now.AddDays(1),
+                ExpiryDate = DateTime.Now.AddYears(1),
                 RequiredDrivers = "5",
                 VehicleRefNo = 1,
                 TotalTempMTA = 0,
