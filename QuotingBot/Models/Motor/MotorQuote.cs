@@ -1,56 +1,23 @@
 ﻿using System;
-using QuotingBot.DAL.Repository.Errors;
+using QuotingBot.Enums;
 using QuotingBot.Logging;
 using QuotingBot.RelayFullCycleMotorService;
 
 namespace QuotingBot.Models.Motor
 {
-    public enum LicenceTypes
-    {
-        FullIrish,
-        ProvisionalIrish,
-        FullEU,
-        FullUK,
-        Foreign,
-        InternationalLicence,
-        LearnerPermit
-        // value expected in XML request
-        // <option value = "C" > Full Irish</option>
-        //<option value = "B" > Provisional Irish</option>
-        // <option value = "F" > Full EU</option>
-        // <option value = "D" > Full UK</option>
-        // <option value = "I" > Foreign </ option >
-        // <option value = "N" > International Licence</option>
-        // <option value = "G" > Learner Permit</option>
-
-    }
-    public enum NoClaimsDiscount
-    {
-        One,
-        Two,
-        Three,
-        Four,
-        Five,
-        Six,
-        Seven,
-        Eight,
-        Nine,
-        OverNine
-    }
-
     [Serializable]
     public class MotorQuote
     {
         public static Error errorLogging = new Error();
         public static RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
+        public static EnumConverters enumConverters = new EnumConverters();
         public string VehicleRegistration;
         public string VehicleValue;
         public string AreaVehicleIsKept;
-        public DateTime? EffectiveDate;
         public string FirstName;
         public string LastName;
-        public DateTime? DateOfBirth;
-        public LicenceTypes? LicenceType;
+        public string DateOfBirth;
+        public LicenceType? LicenceType;
         public NoClaimsDiscount? NoClaimsDiscount;
         public string PrimaryContactNumber;
         public string EmailAddress;
@@ -133,7 +100,7 @@ namespace QuotingBot.Models.Motor
                 Surname = state.LastName,
                 Sex = "M",
                 MaritalStatus = "M",
-                LicenceType = "B",
+                LicenceType = enumConverters.ConvertLicenceType(state.LicenceType),
                 LicenceCountry = "IE",
                 ProsecutionPending = false,
                 LicenceRestrictionInd = false,
@@ -151,7 +118,7 @@ namespace QuotingBot.Models.Motor
                 PermResident = true,
                 NonDrinker = false,
                 TempAdditionalDriver = false,
-                DateOfBirth = (DateTime)state.DateOfBirth,
+                DateOfBirth = Convert.ToDateTime(state.DateOfBirth),
                 IrelandResidencyDate = new DateTime(2000, 04, 11, 02, 00, 00),
                 IrelandLicenceDate = new DateTime(2014, 08, 28, 02, 00, 00),
                 NameddriverNCDClaimedYears = 6,
@@ -189,7 +156,7 @@ namespace QuotingBot.Models.Motor
                 SurName = state.LastName,
                 Sex = "M",
                 MaritalStatus = "M",
-                DateOfBirth = (DateTime)state.DateOfBirth,
+                DateOfBirth = Convert.ToDateTime(state.DateOfBirth),
                 Address = new IrishAddressInfo
                 {
                     Line1 = "1 Main Street",
@@ -214,7 +181,7 @@ namespace QuotingBot.Models.Motor
                 },
                 NCD = new IrishNCDInfo
                 {
-                    ClaimedYearsEarned = 5,
+                    ClaimedYearsEarned = enumConverters.ConvertNoClaimsDiscount(state.NoClaimsDiscount),
                     DrivingExperienceYears = 0,
                     ClaimedCountry = "IE",
                     ClaimedInsurer = "029",
@@ -317,8 +284,8 @@ namespace QuotingBot.Models.Motor
                 Period = "12",
                 CertificateNumber = "0",
                 StartTime = "000100",
-                StartDate = (DateTime)state.EffectiveDate,
-                ExpiryDate = new DateTime(2018, 07, 09, 01, 00, 00),
+                StartDate = DateTime.Now.AddDays(1),
+                ExpiryDate = DateTime.Now.AddYears(1),
                 RequiredDrivers = "5",
                 VehicleRefNo = 1,
                 TotalTempMTA = 0,

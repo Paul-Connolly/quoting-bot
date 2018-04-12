@@ -9,6 +9,7 @@ using QuotingBot.DAL.Repository.Errors;
 using Microsoft.Bot.Connector;
 using System.Collections.Generic;
 using QuotingBot.Helpers;
+using QuotingBot.Enums;
 
 namespace QuotingBot.Dialogs
 {
@@ -16,6 +17,7 @@ namespace QuotingBot.Dialogs
     public class MotorDialog : IDialog<MotorQuote>
     {
         private Validation validation = new Validation();
+        private EnumConverters enumConverters = new EnumConverters();
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No problem!");
@@ -54,16 +56,16 @@ namespace QuotingBot.Dialogs
                     }
                 )
                 .Confirm(generateMessage: async (state) => new PromptAttribute("Is this your car?"))
-                .Field(nameof(MotorQuote.AreaVehicleIsKept),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateAreaVehicleIsKept(value);
-                    }
-                )
                 .Field(nameof(MotorQuote.VehicleValue),
                     validate: async (state, value) =>
                     {
                         return validation.ValidateVehicleValue(value);
+                    }
+                )
+                .Field(nameof(MotorQuote.AreaVehicleIsKept),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateAreaVehicleIsKept(value);
                     }
                 )
                 .Field(nameof(MotorQuote.FirstName),
@@ -78,7 +80,20 @@ namespace QuotingBot.Dialogs
                         return validation.ValidateLastName(value);
                     }
                 )
+                .Field(nameof(MotorQuote.DateOfBirth),
+                    prompt: "What is your date of birth? Enter date in DD/MM/YYYY format please",
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateDateOfBirth(value);
+                    }
+                )
                 .AddRemainingFields()
+                .Field(nameof(MotorQuote.EmailAddress),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateEmailAddress(value);
+                    }
+                )
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Car Registration: {VehicleRegistration}")
                 .OnCompletion(getMotorQuotes)
