@@ -200,6 +200,8 @@
     <Compile Include="Helpers\Validation.cs" />
     <Compile Include="Logging\Error.cs" />
     <Compile Include="Models\Home\HomeQuote.cs" />
+    <Compile Include="Enums\PropertyType.cs" />
+    <Compile Include="Enums\ResidenceType.cs" />
     <Compile Include="Models\Motor\MotorQuote.cs" />
     <Compile Include="Models\Motor\Vehicle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

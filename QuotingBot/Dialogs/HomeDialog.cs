@@ -8,6 +8,7 @@ using Microsoft.Bot.Connector;
 using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.DAL.Repository.Errors;
+using QuotingBot.Helpers;
 using QuotingBot.Models.Home;
 using QuotingBot.RelayHouseholdService;
 
@@ -16,6 +17,7 @@ namespace QuotingBot.Dialogs
     [Serializable]
     public class HomeDialog : IDialog<object>
     {
+        private Validation validation = new Validation();
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No worries - let's do it \U0001F604");
@@ -33,9 +35,37 @@ namespace QuotingBot.Dialogs
 
             return new FormBuilder<HomeQuote>()
                 .Field(nameof(HomeQuote.FirstLineOfAddress))
-                .Field(nameof(HomeQuote.Town))
-                .Field(nameof(HomeQuote.County))
+                .Field(nameof(HomeQuote.Town),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateTown(value);
+                    }
+                )
+                .Field(nameof(HomeQuote.County),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateCounty(value);
+                    }
+                )
+                .Field(nameof(HomeQuote.FirstName),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateFirstName(value);
+                    }
+                )
+                .Field(nameof(HomeQuote.LastName),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateLastName(value);
+                    }
+                )
                 .AddRemainingFields()
+                .Field(nameof(HomeQuote.EmailAddress),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateEmailAddress(value);
+                    }
+                )
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Address: {FirstLineOfAddress}, {Town}, {County}")
                 .OnCompletion(getHomeQuotes)

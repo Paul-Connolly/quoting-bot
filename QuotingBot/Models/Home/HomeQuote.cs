@@ -3,21 +3,6 @@ using QuotingBot.RelayHouseholdService;
 
 namespace QuotingBot.Models.Home
 {
-    public enum PropertyType
-    {
-        Bungalow,
-        DetachedHouse,
-        Flat,
-        SemiDetachedHouse,
-        TerracedHouse
-    }
-
-    public enum ResidenceType
-    {
-        OwnerOccupied,
-        RentedFamily,
-        RentedStudents
-    }
 
     [Serializable]
     public class HomeQuote

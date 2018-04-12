@@ -54,6 +54,50 @@ namespace QuotingBot.Helpers
             return result;
         }
 
+        public ValidateResult ValidateTown(object value)
+        {
+            var town = value.ToString();
+
+            var result = new ValidateResult
+            {
+                IsValid = false
+            };
+
+            if (motorService.GetAreaCodeList().Contains(town))
+            {
+                result.IsValid = true;
+                result.Value = value.ToString();
+            }
+            else
+            {
+                result.Feedback = $"Oh dear...I don't recognise that town.  Can you check the spelling of '{town}' or try an area close by? Thanks \U0001F44D";
+            }
+
+            return result;
+        }
+
+        public ValidateResult ValidateCounty(object value)
+        {
+            var county = value.ToString();
+
+            var result = new ValidateResult
+            {
+                IsValid = false
+            };
+
+            if (motorService.GetCountyCodeList().Contains(county))
+            {
+                result.IsValid = true;
+                result.Value = value.ToString();
+            }
+            else
+            {
+                result.Feedback = $"Oh dear...I don't recognise that county.  Can you check the spelling of '{county}' or try an area close by? Thanks \U0001F44D";
+            }
+
+            return result;
+        }
+
         public ValidateResult ValidateLastName(object value)
         {
             var lastName = value.ToString();
@@ -84,10 +128,7 @@ namespace QuotingBot.Helpers
                 IsValid = false
             };
 
-            var areas = motorService.GetAreaCodeList();
-            var counties = motorService.GetCountyCodeList();
-            
-            if(areas.Contains<string>(area) || counties.Contains<string>(area))
+            if (motorService.GetAreaCodeList().Contains(area) || motorService.GetCountyCodeList().Contains(area))
             {
                 result.IsValid = true;
                 result.Value = value.ToString();
