@@ -1,27 +1,15 @@
 ﻿using System;
+using QuotingBot.Enums;
 using QuotingBot.RelayHouseholdService;
 
 namespace QuotingBot.Models.Home
 {
-    public enum PropertyType
-    {
-        Bungalow,
-        DetachedHouse,
-        Flat,
-        SemiDetachedHouse,
-        TerracedHouse
-    }
-
-    public enum ResidenceType
-    {
-        OwnerOccupied,
-        RentedFamily,
-        RentedStudents
-    }
 
     [Serializable]
     public class HomeQuote
     {
+        public static EnumConverters enumConverters = new EnumConverters();
+
         public string FirstLineOfAddress;
         public string Town;
         public string County;
@@ -29,8 +17,8 @@ namespace QuotingBot.Models.Home
         public string LastName;
         public string PrimaryContactNumber;
         public string EmailAddress;
-        public PropertyType? PropertyType;
-        public ResidenceType? ResidenceType;
+        public Enums.PropertyType? PropertyType;
+        public Enums.ResidenceType? ResidenceType;
         public string YearBuilt;
         public int? NumberOfBedrooms;
         public int? BuildingsCover;
@@ -103,7 +91,7 @@ namespace QuotingBot.Models.Home
 
             request.Occupancy = new Occupancy
             {
-                ResidenceType = RelayHouseholdService.ResidenceType.OwnerOccupied,
+                ResidenceType = enumConverters.ConvertResidencyType(state.ResidenceType),
                 ProposerType = ProposerType.Unspecified,
                 YearsLivingAtAddress = 0,
                 NumberOfPayingGuests = 0,
@@ -116,9 +104,9 @@ namespace QuotingBot.Models.Home
 
             request.Building = new Building
             {
-                PropertyType = RelayHouseholdService.PropertyType.DetachedHouse,
+                PropertyType = enumConverters.ConvertPropertyType(state.PropertyType),
                 PropertySubType = PropertySubType.DetachedHouse,
-                ConstructionDate = new DateTime(2017, 01, 01, 00, 00, 00),
+                ConstructionDate = new DateTime(Convert.ToInt32(state.YearBuilt), 01, 01, 00, 00, 00),
                 ListedBuilding = false,
                 RoofConstruction = RoofConstructionType.Standard,
                 WallConstruction = WallConstructionType.Unknown,
