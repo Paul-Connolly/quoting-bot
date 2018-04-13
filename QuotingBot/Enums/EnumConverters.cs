@@ -1,4 +1,5 @@
 ﻿using System;
+using QuotingBot.RelayHouseholdService;
 
 namespace QuotingBot.Enums
 {
@@ -55,6 +56,40 @@ namespace QuotingBot.Enums
                     return 9;
                 default:
                     return 0;
+            }
+        }
+
+        public RelayHouseholdService.PropertyType ConvertPropertyType(PropertyType? propertyType)
+        {
+            switch (propertyType)
+            {
+                case PropertyType.Bungalow:
+                    return RelayHouseholdService.PropertyType.Bungalow;
+                case PropertyType.DetachedHouse:
+                    return RelayHouseholdService.PropertyType.DetachedHouse;
+                case PropertyType.Flat:
+                    return RelayHouseholdService.PropertyType.Flat;
+                case PropertyType.SemiDetachedHouse:
+                    return RelayHouseholdService.PropertyType.SemiDetachedHouse;
+                case PropertyType.TerracedHouse:
+                    return RelayHouseholdService.PropertyType.TerracedHouse;
+                default:
+                    return RelayHouseholdService.PropertyType.Unknown;
+            }
+        }
+
+        public RelayHouseholdService.ResidenceType ConvertResidencyType(ResidenceType? residenceType)
+        {
+            switch (residenceType)
+            {
+                case ResidenceType.OwnerOccupied:
+                    return RelayHouseholdService.ResidenceType.OwnerOccupied;
+                case ResidenceType.RentedFamily:
+                    return RelayHouseholdService.ResidenceType.RentedFamily;
+                case ResidenceType.RentedStudents:
+                    return RelayHouseholdService.ResidenceType.RentedStudents;
+                default:
+                    return RelayHouseholdService.ResidenceType.Unspecified;
             }
         }
     }

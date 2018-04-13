@@ -98,6 +98,33 @@ namespace QuotingBot.Helpers
             return result;
         }
 
+        public ValidateResult ValidateYearBuilt(object value)
+        {
+            var result = new ValidateResult
+            {
+                IsValid = false
+            };
+
+            if (IsYearBuiltValid(value.ToString()) && int.TryParse(value.ToString(), out int returnValue))
+            {
+                result.IsValid = true;
+                result.Value = returnValue;
+            }
+            else
+            {
+                result.Feedback = $"The value {value} wasn't valid.  Make sure you enter a year in 'YYYY' format, like 2018.";
+            }
+            return result;
+        }
+
+        private bool IsYearBuiltValid(string yearBuilt)
+        {
+            string validYearPattern = @"^[0-9]{4}$";
+            Regex validYear = new Regex(validYearPattern);
+
+            return validYear.IsMatch(yearBuilt);
+        }
+
         public ValidateResult ValidateLastName(object value)
         {
             var lastName = value.ToString();

@@ -66,6 +66,13 @@ namespace QuotingBot.Dialogs
                         return validation.ValidateEmailAddress(value);
                     }
                 )
+                .AddRemainingFields()
+                .Field(nameof(HomeQuote.YearBuilt),
+                    validate: async (state, value) =>
+                    {
+                        return validation.ValidateYearBuilt(value);
+                    }
+                )
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Address: {FirstLineOfAddress}, {Town}, {County}")
                 .OnCompletion(getHomeQuotes)
