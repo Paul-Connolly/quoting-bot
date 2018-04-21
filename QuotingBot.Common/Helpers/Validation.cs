@@ -1,19 +1,22 @@
 ﻿using Microsoft.Bot.Builder.FormFlow;
-using QuotingBot.Logging;
 using System;
+using System.Configuration;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
+using QuotingBot.Common.RelayFullCycleMotorService;
+using QuotingBot.DAL.Repository.Errors;
 using QuotingBot.Enums;
+using System.Linq;
 
 namespace QuotingBot.Helpers
 {
     [Serializable]
     public class Validation
     {
-        private static RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
-        private Formatter formatter = new Formatter();
-        public static Error errorLogging = new Error();
+        private static readonly string Connection = ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
+        private static readonly ErrorRepository ErrorRepository = new ErrorRepository(Connection);
+        private static readonly RelayFullCycleMotorService MotorService = new RelayFullCycleMotorService();
+        private readonly Formatter _formatter = new Formatter();
         public Validation() { }
 
         public ValidateResult ValidateVehicleValue(object value)
@@ -46,7 +49,7 @@ namespace QuotingBot.Helpers
             if(!string.IsNullOrEmpty(firstName))
             {
                 result.IsValid = true;
-                result.Value = formatter.CapitilzeFirstLetter(firstName);
+                result.Value = _formatter.CapitilzeFirstLetter(firstName);
             }
             else
             {
@@ -65,7 +68,7 @@ namespace QuotingBot.Helpers
                 IsValid = false
             };
 
-            if (motorService.GetAreaCodeList().Contains(town))
+            if (MotorService.GetAreaCodeList().Contains(town))
             {
                 result.IsValid = true;
                 result.Value = value.ToString();
@@ -87,7 +90,7 @@ namespace QuotingBot.Helpers
                 IsValid = false
             };
 
-            if (motorService.GetCountyCodeList().Contains(county))
+            if (MotorService.GetCountyCodeList().Contains(county))
             {
                 result.IsValid = true;
                 result.Value = value.ToString();
@@ -138,7 +141,7 @@ namespace QuotingBot.Helpers
             if (!string.IsNullOrEmpty(lastName))
             {
                 result.IsValid = true;
-                result.Value = formatter.CapitilzeFirstLetter(lastName);
+                result.Value = _formatter.CapitilzeFirstLetter(lastName);
             }
             else
             {
@@ -157,7 +160,7 @@ namespace QuotingBot.Helpers
                 IsValid = false
             };
 
-            if (motorService.GetAreaCodeList().Contains(area) || motorService.GetCountyCodeList().Contains(area))
+            if (MotorService.GetAreaCodeList().Contains(area) || MotorService.GetCountyCodeList().Contains(area))
             {
                 result.IsValid = true;
                 result.Value = value.ToString();
@@ -195,7 +198,7 @@ namespace QuotingBot.Helpers
             }
             catch (Exception ex)
             {
-                errorLogging.Log(DateTime.Now.ToShortDateString(), ex.InnerException.ToString());
+                ErrorRepository.LogError(DateTime.Now.ToShortDateString(), ex.InnerException.ToString());
                 throw;
             }
 

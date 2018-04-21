@@ -10,18 +10,23 @@ using Microsoft.Bot.Connector;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Linq;
 using QuotingBot.Helpers;
 using QuotingBot.Common.Email;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.Enums;
+using QuotingBot.RelayFullCycleMotorService;
 
 namespace QuotingBot.Dialogs
 {
     [Serializable]
     public class MotorDialog : IDialog<MotorQuote>
     {
-        private Validation validation = new Validation();
-        private bool sendEmails = Convert.ToBoolean(ConfigurationManager.AppSettings["SendEmails"]);
+        private readonly Validation _validation = new Validation();
+        private static readonly bool SendEmails = Convert.ToBoolean(ConfigurationManager.AppSettings["SendEmails"]);
+        private static readonly string Connection = ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
+        private static readonly ErrorRepository ErrorRepository = new ErrorRepository(Connection);
+
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No problem!");
@@ -61,19 +66,19 @@ namespace QuotingBot.Dialogs
                 )
                 .Confirm(generateMessage: async (state) => new PromptAttribute("Is this your car?"))
                 .Field(nameof(MotorQuote.VehicleValue),
-                    validate: async (state, value) => validation.ValidateVehicleValue(value))
+                    validate: async (state, value) => _validation.ValidateVehicleValue(value))
                 .Field(nameof(MotorQuote.AreaVehicleIsKept),
-                    validate: async (state, value) => validation.ValidateAreaVehicleIsKept(value))
+                    validate: async (state, value) => _validation.ValidateAreaVehicleIsKept(value))
                 .Field(nameof(MotorQuote.FirstName),
-                    validate: async (state, value) => validation.ValidateFirstName(value))
+                    validate: async (state, value) => _validation.ValidateFirstName(value))
                 .Field(nameof(MotorQuote.LastName),
-                    validate: async (state, value) => validation.ValidateLastName(value))
+                    validate: async (state, value) => _validation.ValidateLastName(value))
                 .Field(nameof(MotorQuote.DateOfBirth),
                     prompt: "What is your date of birth? Enter date in DD/MM/YYYY format please",
-                    validate: async (state, value) => validation.ValidateDateOfBirth(value))
+                    validate: async (state, value) => _validation.ValidateDateOfBirth(value))
                 .AddRemainingFields()
                 .Field(nameof(MotorQuote.EmailAddress),
-                    validate: async (state, value) => validation.ValidateEmailAddress(value))
+                    validate: async (state, value) => _validation.ValidateEmailAddress(value))
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Car Registration: {VehicleRegistration}")
                 .OnCompletion(getMotorQuotes)
@@ -87,9 +92,8 @@ namespace QuotingBot.Dialogs
 
             try
             {
-                var connection = System.Configuration.ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
-                var quoteRepository = new QuoteRepository(connection);
-                var conversationRepository = new ConversationRepository(connection);
+                var quoteRepository = new QuoteRepository(Connection);
+                var conversationRepository = new ConversationRepository(Connection);
                 var motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
                 
                 var riskData = MotorQuote.BuildIrishMQRiskInfo(state);
@@ -107,9 +111,9 @@ namespace QuotingBot.Dialogs
                     );
 
                     reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                    reply.Attachments = GetQuoteThumbnails(quotes.Quotations);
+                    reply.Attachments = GetQuoteReceipts(quotes.Quotations);
 
-                    if (sendEmails)
+                    if (SendEmails)
                     {
                         EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
                     }
@@ -118,7 +122,7 @@ namespace QuotingBot.Dialogs
                 }
                 else
                 {
-                    await context.PostAsync("Sorry, we were unable to get your a quote at this point ");
+                    await context.PostAsync("Sorry, we were unable to get your a quote at this point.");
                 }
                 
                 conversationRepository.StoreConversation
@@ -128,13 +132,10 @@ namespace QuotingBot.Dialogs
                     DateTime.Now.ToString(new CultureInfo("en-GB")),
                     new JavaScriptSerializer().Serialize(context)
                 );
-
-                
             }
             catch (Exception exception)
             {
-                var errorRepository = new ErrorRepository();
-                errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.ToString());
+                ErrorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(new CultureInfo("en-GB")), context.ConversationData.ToString(), exception.ToString());
                 throw;
             }
             finally
@@ -143,35 +144,38 @@ namespace QuotingBot.Dialogs
             }
         }
 
-        private IList<Attachment> GetQuoteThumbnails(RelayFullCycleMotorService.IrishMQResultsBreakdown[] breakdowns)
+        private IList<Attachment> GetQuoteReceipts(IrishMQResultsBreakdown[] breakdowns)
         {
-            var cards = new List<Attachment>();
-
-            foreach(var breakdown in breakdowns)
-            {
-                cards.Add(
-                    GetThumbnail(
-                        breakdown.Premium.SchemeName,
-                        breakdown.Premium.TotalPremium.ToString(),
-                        null,
-                        null,
-                        null
-                    )
-                );
-            }
-
-            return cards;
+            return breakdowns.Select(breakdown => GetReceiptCard(breakdown)).ToList();
         }
 
-        private static Attachment GetThumbnail(string title, string subtitle, string text, CardImage cardImage, CardAction cardAction)
+        private static Attachment GetReceiptCard(IrishMQResultsBreakdown breakdown)
         {
-            var thumbnail = new ThumbnailCard
+            try
             {
-                Title = title,
-                Subtitle = '$' + subtitle
-            };
+                var receiptCard = new ReceiptCard
+                {
+                    Title = $"Insurer: {breakdown.Premium.SchemeName}",
+                    Facts = new List<Fact> { new Fact("Scheme", breakdown.Premium.Scheme.SchemeNumber) },
+                    Tax = $"€{breakdown.Premium.PremiumAfterLevy - breakdown.Premium.PremiumBeforeLevy}",
+                    Total = $"€{breakdown.Premium.TotalPremium}",
+                    Buttons = new List<CardAction>
+                    {
+                        new CardAction
+                        (
+                            ActionTypes.PostBack,
+                            "Request a Callback"
+                        )
+                    }
+                };
 
-            return thumbnail.ToAttachment();
+                return receiptCard.ToAttachment();
+            }
+            catch (Exception exception)
+            {
+                ErrorRepository.LogError(DateTime.Now.ToString(new CultureInfo("en-GB")), exception.ToString());
+                throw;
+            }
         }
     }
 }

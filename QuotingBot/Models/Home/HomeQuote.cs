@@ -1,6 +1,8 @@
 ﻿using System;
-using QuotingBot.Enums;
-using QuotingBot.RelayHouseholdService;
+using QuotingBot.Common.Enums;
+using QuotingBot.Common.RelayHouseholdService;
+using PropertyType = QuotingBot.Common.Enums.PropertyType;
+using ResidenceType = QuotingBot.Common.Enums.ResidenceType;
 
 namespace QuotingBot.Models.Home
 {
@@ -17,8 +19,8 @@ namespace QuotingBot.Models.Home
         public string LastName;
         public string PrimaryContactNumber;
         public string EmailAddress;
-        public Enums.PropertyType? PropertyType;
-        public Enums.ResidenceType? ResidenceType;
+        public PropertyType? PropertyType;
+        public ResidenceType? ResidenceType;
         public string YearBuilt;
         public int? NumberOfBedrooms;
 

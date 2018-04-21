@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QuotingBot.Enums
+namespace QuotingBot.Common.Enums
 {
     [Serializable]
     public enum ResidenceType

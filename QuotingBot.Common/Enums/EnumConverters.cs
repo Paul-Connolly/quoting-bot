@@ -1,7 +1,6 @@
 ﻿using System;
-using QuotingBot.RelayHouseholdService;
 
-namespace QuotingBot.Enums
+namespace QuotingBot.Common.Enums
 {
     [Serializable]
     public class EnumConverters

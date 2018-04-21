@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
-using QuotingBot.Enums;
-using QuotingBot.Logging;
+using QuotingBot.Common.Enums;
+using QuotingBot.DAL.Repository.Errors;
 using QuotingBot.RelayFullCycleMotorService;
 
 namespace QuotingBot.Models.Motor
@@ -9,8 +10,9 @@ namespace QuotingBot.Models.Motor
     [Serializable]
     public class MotorQuote
     {
-        public static Error errorLogging = new Error();
         public static RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
+        private static readonly string Connection = ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
+        private static readonly ErrorRepository _errorRepository = new ErrorRepository(Connection);
         public static EnumConverters enumConverters = new EnumConverters();
         public string VehicleRegistration;
         public string VehicleValue;
@@ -51,7 +53,7 @@ namespace QuotingBot.Models.Motor
             }
             catch (Exception exception)
             {
-                errorLogging.Log(DateTime.Now.ToString(), exception.InnerException.ToString());
+                _errorRepository.LogError(DateTime.Now.ToString(new CultureInfo("en-GB")), exception.ToString());
                 throw;
             }
 
@@ -77,7 +79,7 @@ namespace QuotingBot.Models.Motor
             }
             catch(Exception exception)
             {
-                errorLogging.Log(DateTime.Now.ToString(), exception.InnerException.ToString());
+                _errorRepository.LogError(DateTime.Now.ToString(new CultureInfo("en-GB")), exception.ToString());
                 throw;
             }
 
@@ -246,7 +248,7 @@ namespace QuotingBot.Models.Motor
                 DateFirstRegistered = new DateTime(state.Vehicle.YearOfFirstManufacture, 01, 01, 02, 00, 00),
                 DatePurchased = new DateTime(2017, 05, 01, 02, 00, 00),
                 ModifiedInd = false,
-                IrelandRegistered = false,
+                IrelandRegistered = true,
                 Imported = false,
                 SecurityDeviceInd = true,
                 TrailerInd = false,
