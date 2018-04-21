@@ -10,6 +10,7 @@ using QuotingBot.Common.Email;
 using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.DAL.Repository.Errors;
+using QuotingBot.Enums;
 using QuotingBot.Helpers;
 using QuotingBot.Models.Home;
 using QuotingBot.RelayHouseholdService;
@@ -22,7 +23,7 @@ namespace QuotingBot.Dialogs
         private Validation validation = new Validation();
         public async Task StartAsync(IDialogContext context)
         {
-            await context.PostAsync("No worries - let's do it \U0001F604");
+            await context.PostAsync($"No worries - let's do it {Emoji.GrinningFace}");
 
             var homeQuoteFormDialog = FormDialog.FromForm(this.BuildHomeQuoteForm, FormOptions.PromptInStart);
             context.Call(homeQuoteFormDialog, ResumeAfterHomeQuoteFormDialog);

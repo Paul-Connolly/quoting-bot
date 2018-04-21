@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
+using QuotingBot.Enums;
 
 namespace QuotingBot.Dialogs
 {
     [Serializable]
     public sealed class RootDialog : IDialog<object>
     {
-        private const string MotorInsuranceOption = "Motor insurance \U0001F698";
-        private const string HomeInsuranceOption = "Home insurance \U0001F3E1";
-
+        private readonly string _motorInsuranceOption = $"Motor insurance {Emoji.Car}";
+        private readonly string _homeInsuranceOption = $"Home insurance {Emoji.House}";
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Hi, I'm Ava - your friendly quoting bot!");
@@ -23,7 +23,7 @@ namespace QuotingBot.Dialogs
             (
                 context, 
                 OnOptionSelected, 
-                new List<string> { MotorInsuranceOption, HomeInsuranceOption }, 
+                new List<string> { _motorInsuranceOption, _homeInsuranceOption }, 
                 "What can I get you a quote for today?",
                 "Hmmm...that's not a valid option.  Please choose an option from the list."
             );
@@ -35,14 +35,13 @@ namespace QuotingBot.Dialogs
             {
                 var optionSelected = await result;
 
-                switch (optionSelected)
+                if (optionSelected == _motorInsuranceOption)
                 {
-                    case MotorInsuranceOption:
-                        context.Call(new MotorDialog(), ResumeAfterOptionDialog);
-                        break;
-                    case HomeInsuranceOption:
-                        context.Call(new HomeDialog(), ResumeAfterOptionDialog);
-                        break;
+                    context.Call(new MotorDialog(), ResumeAfterOptionDialog);
+                }
+                else
+                { 
+                    context.Call(new HomeDialog(), ResumeAfterOptionDialog);
                 }
             }
             catch (Exception)

@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using QuotingBot.Enums;
 
 namespace QuotingBot.Helpers
 {
@@ -71,7 +72,7 @@ namespace QuotingBot.Helpers
             }
             else
             {
-                result.Feedback = $"Oh dear...I don't recognise that town.  Can you check the spelling of '{town}' or try an area close by? Thanks \U0001F44D";
+                result.Feedback = $"Oh dear...I don't recognise that town.  Can you check the spelling of '{town}' or try an area close by? Thanks {Emoji.ThumbsUp}";
             }
 
             return result;
@@ -93,7 +94,7 @@ namespace QuotingBot.Helpers
             }
             else
             {
-                result.Feedback = $"Oh dear...I don't recognise that county.  Can you check the spelling of '{county}' or try an area close by? Thanks \U0001F44D";
+                result.Feedback = $"Oh dear...I don't recognise that county.  Can you check the spelling of '{county}' or try an area close by? Thanks {Emoji.ThumbsUp}";
             }
 
             return result;
@@ -163,7 +164,7 @@ namespace QuotingBot.Helpers
             }
             else
             {
-                result.Feedback = $"Oh dear...I don't recognise that area.  Can you check the spelling of '{area}' or try an area close by? Thanks \U0001F44D";
+                result.Feedback = $"Oh dear...I don't recognise that area.  Can you check the spelling of '{area}' or try an area close by? Thanks {Emoji.ThumbsUp}";
             }
 
             return result;
@@ -215,7 +216,7 @@ namespace QuotingBot.Helpers
             }
             else
             {
-                result.Feedback = "Please enter a valid email address \U0001F4E7";
+                result.Feedback = $"Please enter a valid email address {Emoji.Email}";
             }
 
             return result;

@@ -190,6 +190,7 @@
     <Compile Include="Dialogs\HomeDialog.cs" />
     <Compile Include="Dialogs\MotorDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Enums\Emoji.cs" />
     <Compile Include="Enums\LicenceType.cs" />
     <Compile Include="Enums\NoClaimsDiscount.cs" />
     <Compile Include="Global.asax.cs">

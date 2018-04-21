@@ -12,6 +12,7 @@ using System.Globalization;
 using QuotingBot.Helpers;
 using QuotingBot.Common.Email;
 using QuotingBot.DAL.Repository.Conversations;
+using QuotingBot.Enums;
 
 namespace QuotingBot.Dialogs
 {
@@ -22,7 +23,7 @@ namespace QuotingBot.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No problem!");
-            await context.PostAsync("Let's get started \U0001F604");
+            await context.PostAsync($"Let's get started {Emoji.GrinningFace}");
 
             var motorQuoteFormDialog = FormDialog.FromForm(this.BuildMotorQuoteForm, FormOptions.PromptInStart);
             context.Call(motorQuoteFormDialog, this.ResumeAfterMotorQuoteFormDialog);
@@ -51,7 +52,7 @@ namespace QuotingBot.Dialogs
                         else
                         {
                             result.IsValid = false;
-                            result.Feedback = "Hmmm...I couldn't find a match for that registration \U0001F914 Please try again";
+                            result.Feedback = $"Hmmm...I couldn't find a match for that registration {Emoji.ThinkingFace} Please try again";
                         }
                         return result;
                     }
@@ -93,20 +94,27 @@ namespace QuotingBot.Dialogs
                 var messageRequestInfo = MotorQuote.BuildMessageRequestInfo();
                 
                 var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 100, true, null, messageRequestInfo);
-                
-                quoteRepository.StoreQuote
+
+                if (quotes.Quotations != null)
+                {
+                    quoteRepository.StoreQuote
                     (
-                        context.Activity.Conversation.Id, 
-                        quotes.TransactionID, 
+                        context.Activity.Conversation.Id,
+                        quotes.TransactionID,
                         new JavaScriptSerializer().Serialize(quotes.Quotations[0])
                     );
 
-                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                reply.Attachments = GetQuoteThumbnails(quotes.Quotations);
+                    reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                    reply.Attachments = GetQuoteThumbnails(quotes.Quotations);
 
-                EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
-                await context.PostAsync(reply);
-
+                    EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                    await context.PostAsync(reply);
+                }
+                else
+                {
+                    await context.PostAsync("Sorry, we were unable to get your a quote at this point ");
+                }
+                
                 conversationRepository.StoreConversation
                 (
                     context.Activity.Conversation.Id,
@@ -114,6 +122,8 @@ namespace QuotingBot.Dialogs
                     DateTime.Now.ToString(new CultureInfo("en-GB")),
                     new JavaScriptSerializer().Serialize(context)
                 );
+
+                
             }
             catch (Exception exception)
             {

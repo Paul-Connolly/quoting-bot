@@ -243,7 +243,7 @@ namespace QuotingBot.Models.Motor
                 RegistrationNo = state.VehicleRegistration,
                 RegisteredKeeper = "1",
                 DateManufactured = new DateTime(state.Vehicle.YearOfFirstManufacture, 01, 01, 02, 00, 00),
-                DateFirstRegistered = new DateTime(2005, 12, 15, 02, 00, 00),
+                DateFirstRegistered = new DateTime(state.Vehicle.YearOfFirstManufacture, 01, 01, 02, 00, 00),
                 DatePurchased = new DateTime(2017, 05, 01, 02, 00, 00),
                 ModifiedInd = false,
                 IrelandRegistered = false,
