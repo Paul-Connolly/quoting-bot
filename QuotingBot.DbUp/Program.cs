@@ -11,8 +11,8 @@ namespace QuotingBot.DbUp
         static int Main(string[] args)
         {
             var connectionString = args.FirstOrDefault()
-                                   //?? "Server=PCONNOLLY\\SQL2014; Database=QuotingBot; Trusted_connection=true";
-                                   ?? "Server=DESKTOP-HL69CK9\\PCONNOLLY; Database=QuotingBot; Trusted_connection=true";
+                                   ?? "Server=PCONNOLLY\\SQL2014; Database=QuotingBot; Trusted_connection=true";
+            //?? "Server=DESKTOP-HL69CK9\\PCONNOLLY; Database=QuotingBot; Trusted_connection=true";
 
             EnsureDatabase.For.SqlDatabase(connectionString);
 

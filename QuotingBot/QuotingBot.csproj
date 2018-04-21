@@ -281,6 +281,10 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QuotingBot.Common\QuotingBot.Common.csproj">
+      <Project>{ac28ad1d-b520-4ad8-b9f6-d8aac0587334}</Project>
+      <Name>QuotingBot.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QuotingBot.DAL\QuotingBot.DAL.csproj">
       <Project>{9f2dfa95-d93f-41ee-97cc-a7c55b25dbc5}</Project>
       <Name>QuotingBot.DAL</Name>

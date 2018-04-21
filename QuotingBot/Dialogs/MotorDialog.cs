@@ -8,8 +8,10 @@ using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Errors;
 using Microsoft.Bot.Connector;
 using System.Collections.Generic;
+using System.Globalization;
 using QuotingBot.Helpers;
-using QuotingBot.Enums;
+using QuotingBot.Common.Email;
+using QuotingBot.DAL.Repository.Conversations;
 
 namespace QuotingBot.Dialogs
 {
@@ -17,7 +19,6 @@ namespace QuotingBot.Dialogs
     public class MotorDialog : IDialog<MotorQuote>
     {
         private Validation validation = new Validation();
-        private EnumConverters enumConverters = new EnumConverters();
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No problem!");
@@ -57,43 +58,19 @@ namespace QuotingBot.Dialogs
                 )
                 .Confirm(generateMessage: async (state) => new PromptAttribute("Is this your car?"))
                 .Field(nameof(MotorQuote.VehicleValue),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateVehicleValue(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateVehicleValue(value))
                 .Field(nameof(MotorQuote.AreaVehicleIsKept),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateAreaVehicleIsKept(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateAreaVehicleIsKept(value))
                 .Field(nameof(MotorQuote.FirstName),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateFirstName(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateFirstName(value))
                 .Field(nameof(MotorQuote.LastName),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateLastName(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateLastName(value))
                 .Field(nameof(MotorQuote.DateOfBirth),
                     prompt: "What is your date of birth? Enter date in DD/MM/YYYY format please",
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateDateOfBirth(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateDateOfBirth(value))
                 .AddRemainingFields()
                 .Field(nameof(MotorQuote.EmailAddress),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateEmailAddress(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateEmailAddress(value))
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Car Registration: {VehicleRegistration}")
                 .OnCompletion(getMotorQuotes)
@@ -107,7 +84,9 @@ namespace QuotingBot.Dialogs
 
             try
             {
-                var quoteRepository = new QuoteRepository();
+                var connection = System.Configuration.ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
+                var quoteRepository = new QuoteRepository(connection);
+                var conversationRepository = new ConversationRepository(connection);
                 var motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
                 
                 var riskData = MotorQuote.BuildIrishMQRiskInfo(state);
@@ -115,17 +94,31 @@ namespace QuotingBot.Dialogs
                 
                 var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 100, true, null, messageRequestInfo);
                 
-                quoteRepository.StoreQuote(context.Activity.Conversation.Id, quotes.TransactionID, new JavaScriptSerializer().Serialize(quotes.Quotations[0]));
+                quoteRepository.StoreQuote
+                    (
+                        context.Activity.Conversation.Id, 
+                        quotes.TransactionID, 
+                        new JavaScriptSerializer().Serialize(quotes.Quotations[0])
+                    );
 
                 reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                 reply.Attachments = GetQuoteThumbnails(quotes.Quotations);
 
+                EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
                 await context.PostAsync(reply);
+
+                conversationRepository.StoreConversation
+                (
+                    context.Activity.Conversation.Id,
+                    context.Activity.From.Id,
+                    DateTime.Now.ToString(new CultureInfo("en-GB")),
+                    new JavaScriptSerializer().Serialize(context)
+                );
             }
             catch (Exception exception)
             {
                 var errorRepository = new ErrorRepository();
-                errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.InnerException.ToString());
+                errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.ToString());
                 throw;
             }
             finally

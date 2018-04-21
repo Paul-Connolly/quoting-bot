@@ -8,7 +8,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	INSERT INTO [Conversation](ConversationId, UserId, ConversationDate, ConversationLog) 
+	INSERT INTO [Conversations](ConversationId, UserId, ConversationDate, ConversationLog) 
 	VALUES(@ConversationId, @UserId, @ConversationDate, @ConversationLog)
 END
 GO

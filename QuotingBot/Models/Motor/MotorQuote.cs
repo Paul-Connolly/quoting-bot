@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using QuotingBot.Enums;
 using QuotingBot.Logging;
 using QuotingBot.RelayFullCycleMotorService;
@@ -118,7 +119,7 @@ namespace QuotingBot.Models.Motor
                 PermResident = true,
                 NonDrinker = false,
                 TempAdditionalDriver = false,
-                DateOfBirth = Convert.ToDateTime(state.DateOfBirth),
+                DateOfBirth = Convert.ToDateTime(state.DateOfBirth, new CultureInfo("en-GB")),
                 IrelandResidencyDate = new DateTime(2000, 04, 11, 02, 00, 00),
                 IrelandLicenceDate = new DateTime(2014, 08, 28, 02, 00, 00),
                 NameddriverNCDClaimedYears = 6,
@@ -156,7 +157,7 @@ namespace QuotingBot.Models.Motor
                 SurName = state.LastName,
                 Sex = "M",
                 MaritalStatus = "M",
-                DateOfBirth = Convert.ToDateTime(state.DateOfBirth),
+                DateOfBirth = Convert.ToDateTime(state.DateOfBirth, new CultureInfo("en-GB")),
                 Address = new IrishAddressInfo
                 {
                     Line1 = "1 Main Street",

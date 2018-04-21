@@ -60,7 +60,7 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	INSERT INTO [Conversation](ConversationId, UserId, ConversationDate, QuoteId, ConversationLog) 
+	INSERT INTO [Conversations](ConversationId, UserId, ConversationDate, QuoteId, ConversationLog) 
 	VALUES(@ConversationId, @UserId, @ConversationDate, @QuoteId, @ConversationLog)
 END
 GO

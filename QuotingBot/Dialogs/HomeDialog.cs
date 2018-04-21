@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
+using QuotingBot.Common.Email;
 using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.DAL.Repository.Errors;
@@ -36,43 +38,20 @@ namespace QuotingBot.Dialogs
             return new FormBuilder<HomeQuote>()
                 .Field(nameof(HomeQuote.FirstLineOfAddress))
                 .Field(nameof(HomeQuote.Town),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateTown(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateTown(value))
                 .Field(nameof(HomeQuote.County),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateCounty(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateCounty(value))
                 .Field(nameof(HomeQuote.FirstName),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateFirstName(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateFirstName(value))
                 .Field(nameof(HomeQuote.LastName),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateLastName(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateLastName(value))
                 .AddRemainingFields()
                 .Field(nameof(HomeQuote.EmailAddress),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateEmailAddress(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateEmailAddress(value))
                 .AddRemainingFields()
                 .Field(nameof(HomeQuote.YearBuilt),
-                    validate: async (state, value) =>
-                    {
-                        return validation.ValidateYearBuilt(value);
-                    }
-                )
+                    validate: async (state, value) => validation.ValidateYearBuilt(value))
+                .AddRemainingFields()
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Address: {FirstLineOfAddress}, {Town}, {County}")
                 .OnCompletion(getHomeQuotes)
@@ -85,8 +64,9 @@ namespace QuotingBot.Dialogs
 
             try
             {
-                var quoteRepository = new QuoteRepository();
-                var conversationRepository = new ConversationRepository();
+                var connection = System.Configuration.ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
+                var quoteRepository = new QuoteRepository(connection);
+                var conversationRepository = new ConversationRepository(connection);
                 var reply = context.MakeMessage();
 
                 var homeService = new Household();
@@ -112,11 +92,12 @@ namespace QuotingBot.Dialogs
 
                 await context.PostAsync(reply);
 
+                EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
                 conversationRepository.StoreConversation
                     (
                         context.Activity.Conversation.Id,
                         context.Activity.From.Id,
-                        DateTime.Now.ToString(),
+                        DateTime.Now.ToString(new CultureInfo("en-GB")),
                         new JavaScriptSerializer().Serialize(context)
                     );
             }

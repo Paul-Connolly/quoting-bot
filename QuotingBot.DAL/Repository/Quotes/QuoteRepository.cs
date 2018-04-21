@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using QuotingBot.Models;
-using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -8,11 +7,15 @@ namespace QuotingBot.DAL.Quotes
 {
     public class QuoteRepository
     {
-        public QuoteRepository() { }
+        private string ConnectionString { get; }
+
+        public QuoteRepository(string connectionString) {
+            ConnectionString = connectionString;
+        }
 
         public async void StoreQuote(string conversationId, string quoteId, string quoteInfo)
         {
-            using (var connection = new SqlConnection("Server=DESKTOP-HL69CK9\\PCONNOLLY; Database=QuotingBot; Trusted_connection=true"))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 await connection.OpenAsync();
                 var quote = new Quote

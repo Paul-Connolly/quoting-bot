@@ -1,6 +1,7 @@
 ﻿using Microsoft.Bot.Builder.FormFlow;
 using QuotingBot.Logging;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -108,7 +109,7 @@ namespace QuotingBot.Helpers
             if (IsYearBuiltValid(value.ToString()) && int.TryParse(value.ToString(), out int returnValue))
             {
                 result.IsValid = true;
-                result.Value = returnValue;
+                result.Value = returnValue.ToString();
             }
             else
             {
@@ -177,7 +178,8 @@ namespace QuotingBot.Helpers
 
             try
             {
-                var date = Convert.ToDateTime(value);
+                CultureInfo culture = new CultureInfo("en-GB");
+                var date = Convert.ToDateTime(value, culture);
 
                 if(IsProposerOfLegalDrivingAge(date))
                 {

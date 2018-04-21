@@ -15,7 +15,7 @@ namespace QuotingBot.DAL.Repository.Errors
             using (var connection = new SqlConnection("Server=DESKTOP-HL69CK9\\PCONNOLLY; Database=QuotingBot; Trusted_connection=true"))
             {
                 await connection.OpenAsync();
-                var quote = new Error
+                var error = new Error
                 (
                     conversationId,
                     userId,
@@ -24,7 +24,7 @@ namespace QuotingBot.DAL.Repository.Errors
                     errorMessage
                 );
 
-                await connection.ExecuteAsync("usp_Add_Error", quote, null, null, CommandType.StoredProcedure);
+                await connection.ExecuteAsync("usp_Add_Error", error, null, null, CommandType.StoredProcedure);
             }
         }
 
