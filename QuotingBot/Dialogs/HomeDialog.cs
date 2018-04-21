@@ -52,6 +52,8 @@ namespace QuotingBot.Dialogs
                 .AddRemainingFields()
                 .Field(nameof(HomeQuote.YearBuilt),
                     validate: async (state, value) => validation.ValidateYearBuilt(value))
+                .Field(nameof(HomeQuote.NumberOfBedrooms),
+                    validate: async (state, value) => validation.ValidateNumberOfBedrooms(value))
                 .AddRemainingFields()
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Address: {FirstLineOfAddress}, {Town}, {County}")

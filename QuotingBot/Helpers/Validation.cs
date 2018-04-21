@@ -231,6 +231,31 @@ namespace QuotingBot.Helpers
 
             return validEmailAddress.IsMatch(emailAddress);
         }
-            
+
+        public ValidateResult ValidateNumberOfBedrooms(object value)
+        {
+            var result = new ValidateResult
+            {
+                IsValid = false
+            };
+
+            if (int.TryParse(value.ToString(), out int returnValue))
+            {
+                if (returnValue >= 0 && returnValue <= 9)
+                {
+                    result.IsValid = true;
+                    result.Value = returnValue.ToString();
+                }
+                else
+                {
+                    result.Feedback = $"Sorry, but we can't quote for {value} bedrooms.";
+                }
+            }
+            else
+            {
+                result.Feedback = $"Sorry, {value} wasn't valid number of bedrooms.";
+            }
+            return result;
+        }
     }
 }

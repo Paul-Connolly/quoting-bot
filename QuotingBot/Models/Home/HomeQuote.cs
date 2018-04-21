@@ -21,8 +21,6 @@ namespace QuotingBot.Models.Home
         public Enums.ResidenceType? ResidenceType;
         public string YearBuilt;
         public int? NumberOfBedrooms;
-        public int? BuildingsCover;
-        public int? ContentsCover;
 
         public static HomeWebServiceRequest BuildHomeWebServiceRequest(HomeQuote state)
         {
