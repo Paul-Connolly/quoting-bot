@@ -76,31 +76,36 @@ namespace QuotingBot.Dialogs
                 var quotes = new List<HomeQuoteWebServiceResult>();
                 
                 var response = homeService.GetQuotes(homeWebServiceRequest);
-                foreach(var quote in response.Quotes)
+
+                if (response.Quotes != null)
                 {
-                    quotes.Add(quote);
-                }
+                    foreach (var quote in response.Quotes)
+                    {
+                        quotes.Add(quote);
+                    }
 
-                reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                reply.Attachments = GetQuoteThumbnails(quotes);
+                    reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                    reply.Attachments = GetQuoteThumbnails(quotes);
 
-                quoteRepository.StoreQuote
+                    quoteRepository.StoreQuote
                     (
                         context.Activity.Conversation.Id,
                         response.Quotes[0].RelayQuoteId,
                         new JavaScriptSerializer().Serialize(quotes)
                     );
+                }
 
                 await context.PostAsync(reply);
 
                 EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+
                 conversationRepository.StoreConversation
-                    (
-                        context.Activity.Conversation.Id,
-                        context.Activity.From.Id,
-                        DateTime.Now.ToString(new CultureInfo("en-GB")),
-                        new JavaScriptSerializer().Serialize(context)
-                    );
+                (
+                    context.Activity.Conversation.Id,
+                    context.Activity.From.Id,
+                    DateTime.Now.ToString(new CultureInfo("en-GB")),
+                    new JavaScriptSerializer().Serialize(context)
+                );
             }
             catch (Exception exception)
             {
