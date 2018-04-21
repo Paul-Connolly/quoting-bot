@@ -8,11 +8,16 @@ namespace QuotingBot.DAL.Repository.Errors
 {
     public class ErrorRepository
     {
-        public ErrorRepository() { }
+        private string Connection { get; }
+
+        public ErrorRepository(string connection)
+        {
+            Connection = connection;
+        }
 
         public async void LogError(string conversationId, string userId, string conversationDate, string conversationLog, string errorMessage)
         {
-            using (var connection = new SqlConnection("Server=DESKTOP-HL69CK9\\PCONNOLLY; Database=QuotingBot; Trusted_connection=true"))
+            using (var connection = new SqlConnection(Connection))
             {
                 await connection.OpenAsync();
                 var error = new Error
@@ -30,7 +35,7 @@ namespace QuotingBot.DAL.Repository.Errors
 
         public async void LogError(string conversationDate, string errorMessage)
         {
-            using (var connection = new SqlConnection("Server=DESKTOP-HL69CK9\\PCONNOLLY; Database=QuotingBot; Trusted_connection=true"))
+            using (var connection = new SqlConnection(Connection))
             {
                 await connection.OpenAsync();
                 var quote = new Error

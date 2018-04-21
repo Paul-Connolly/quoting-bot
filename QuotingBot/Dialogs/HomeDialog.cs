@@ -14,15 +14,18 @@ using QuotingBot.DAL.Repository.Errors;
 using QuotingBot.Enums;
 using QuotingBot.Helpers;
 using QuotingBot.Models.Home;
-using QuotingBot.RelayHouseholdService;
+using QuotingBot.Common.RelayHouseholdService;
 
 namespace QuotingBot.Dialogs
 {
     [Serializable]
     public class HomeDialog : IDialog<object>
     {
-        private Validation validation = new Validation();
-        private static bool sendEmails = Convert.ToBoolean(ConfigurationManager.AppSettings["SendEmails"]);
+        private readonly Validation _validation = new Validation();
+        private static readonly bool SendEmails = Convert.ToBoolean(ConfigurationManager.AppSettings["SendEmails"]);
+        private static readonly string Connection = ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
+        private static readonly ErrorRepository ErrorRepository = new ErrorRepository(Connection);
+
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync($"No worries - let's do it {Emoji.GrinningFace}");
@@ -41,22 +44,22 @@ namespace QuotingBot.Dialogs
             return new FormBuilder<HomeQuote>()
                 .Field(nameof(HomeQuote.FirstLineOfAddress))
                 .Field(nameof(HomeQuote.Town),
-                    validate: async (state, value) => validation.ValidateTown(value))
+                    validate: async (state, value) => _validation.ValidateTown(value))
                 .Field(nameof(HomeQuote.County),
-                    validate: async (state, value) => validation.ValidateCounty(value))
+                    validate: async (state, value) => _validation.ValidateCounty(value))
                 .Field(nameof(HomeQuote.FirstName),
-                    validate: async (state, value) => validation.ValidateFirstName(value))
+                    validate: async (state, value) => _validation.ValidateFirstName(value))
                 .Field(nameof(HomeQuote.LastName),
-                    validate: async (state, value) => validation.ValidateLastName(value))
+                    validate: async (state, value) => _validation.ValidateLastName(value))
                 .AddRemainingFields()
                 .Field(nameof(HomeQuote.EmailAddress),
-                    validate: async (state, value) => validation.ValidateEmailAddress(value))
+                    validate: async (state, value) => _validation.ValidateEmailAddress(value))
                 .AddRemainingFields()
                 .Field(nameof(HomeQuote.YearBuilt),
-                    validate: async (state, value) => validation.ValidateYearBuilt(value))
+                    validate: async (state, value) => _validation.ValidateYearBuilt(value))
                 .Field(nameof(HomeQuote.NumberOfBedrooms),
                     prompt: "How many bedrooms are in the property? (0-9 bedrooms)",
-                    validate: async (state, value) => validation.ValidateNumberOfBedrooms(value))
+                    validate: async (state, value) => _validation.ValidateNumberOfBedrooms(value))
                 .AddRemainingFields()
                 .Confirm("Do you want to request a quote using the following details?" +
                          "Address: {FirstLineOfAddress}, {Town}, {County}")
@@ -70,9 +73,8 @@ namespace QuotingBot.Dialogs
 
             try
             {
-                var connection = System.Configuration.ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
-                var quoteRepository = new QuoteRepository(connection);
-                var conversationRepository = new ConversationRepository(connection);
+                var quoteRepository = new QuoteRepository(Connection);
+                var conversationRepository = new ConversationRepository(Connection);
                 var reply = context.MakeMessage();
 
                 var homeService = new Household();
@@ -90,7 +92,7 @@ namespace QuotingBot.Dialogs
                     }
 
                     reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                    reply.Attachments = GetQuoteThumbnails(quotes);
+                    reply.Attachments = GetQuoteReceipts(quotes);
 
                     quoteRepository.StoreQuote
                     (
@@ -102,7 +104,7 @@ namespace QuotingBot.Dialogs
 
                 await context.PostAsync(reply);
 
-                if (sendEmails)
+                if (SendEmails)
                 {
                     EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
                 }
@@ -117,7 +119,7 @@ namespace QuotingBot.Dialogs
             }
             catch (Exception exception)
             {
-                var errorRepository = new ErrorRepository();
+                var errorRepository = new ErrorRepository(Connection);
                 errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.InnerException.ToString());
                 throw;
             }
@@ -127,36 +129,48 @@ namespace QuotingBot.Dialogs
             }
         }
 
-        private static IList<Attachment> GetQuoteThumbnails(List<HomeQuoteWebServiceResult> results)
+        private static IList<Attachment> GetQuoteReceipts(List<HomeQuoteWebServiceResult> homeQuoteWebServiceResults)
         {
             var cards = new List<Attachment>();
 
-            foreach (var result in results)
+            foreach (var result in homeQuoteWebServiceResults)
             {
-                cards.Add(
-                    GetThumbnail(
-                        result.InsurerName,
-                        result.SchemeName,
-                        result.NetPremium.ToString(),
-                        null,
-                        null
-                    )
-                );
+                if (result.NetPremium > 0)
+                {
+                    cards.Add(GetReceiptCard(result));
+                }
             }
 
             return cards;
         }
 
-        private static Attachment GetThumbnail(string title, string subtitle, string text, CardImage cardImage, CardAction cardAction)
+        private static Attachment GetReceiptCard(HomeQuoteWebServiceResult homeQuoteWebServiceResult)
         {
-            var thumbnail = new ThumbnailCard
+            try
             {
-                Title = title,
-                Subtitle = subtitle,
-                Text = '$' + text
-            };
+                var receiptCard = new ReceiptCard
+                {
+                    Title = $"{homeQuoteWebServiceResult.InsurerName}",
+                    Facts = new List<Fact> { new Fact("Scheme", homeQuoteWebServiceResult.SchemeName) },
+                    Tax = $"€{homeQuoteWebServiceResult.GovernmentLevyPremium}",
+                    Total = $"€{homeQuoteWebServiceResult.NetPremium}",
+                    Buttons = new List<CardAction>
+                    {
+                        new CardAction
+                        (
+                            ActionTypes.PostBack,
+                            "Request a Callback"
+                        )
+                    }
+                };
 
-            return thumbnail.ToAttachment();
+                return receiptCard.ToAttachment();
+            }
+            catch (Exception exception)
+            {
+                ErrorRepository.LogError(DateTime.Now.ToString(new CultureInfo("en-GB")), exception.ToString());
+                throw;
+            }
         }
     }
 }

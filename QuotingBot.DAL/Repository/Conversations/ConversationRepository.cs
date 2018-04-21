@@ -39,7 +39,7 @@ namespace QuotingBot.DAL.Repository.Conversations
             }
             catch(Exception exception)
             {
-                var errorRepository = new ErrorRepository();
+                var errorRepository = new ErrorRepository(Connection);
                 errorRepository.LogError(conversationId, userId, DateTime.Now.ToString(), conversationLog, exception.ToString());
                 throw;
             }
