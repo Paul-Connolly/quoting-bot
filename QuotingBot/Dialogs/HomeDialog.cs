@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -21,6 +22,7 @@ namespace QuotingBot.Dialogs
     public class HomeDialog : IDialog<object>
     {
         private Validation validation = new Validation();
+        private static bool sendEmails = Convert.ToBoolean(ConfigurationManager.AppSettings["SendEmails"]);
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync($"No worries - let's do it {Emoji.GrinningFace}");
@@ -53,6 +55,7 @@ namespace QuotingBot.Dialogs
                 .Field(nameof(HomeQuote.YearBuilt),
                     validate: async (state, value) => validation.ValidateYearBuilt(value))
                 .Field(nameof(HomeQuote.NumberOfBedrooms),
+                    prompt: "How many bedrooms are in the property? (0-9 bedrooms)",
                     validate: async (state, value) => validation.ValidateNumberOfBedrooms(value))
                 .AddRemainingFields()
                 .Confirm("Do you want to request a quote using the following details?" +
@@ -99,7 +102,10 @@ namespace QuotingBot.Dialogs
 
                 await context.PostAsync(reply);
 
-                EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                if (sendEmails)
+                {
+                    EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                }
 
                 conversationRepository.StoreConversation
                 (

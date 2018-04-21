@@ -8,6 +8,7 @@ using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Errors;
 using Microsoft.Bot.Connector;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using QuotingBot.Helpers;
 using QuotingBot.Common.Email;
@@ -20,6 +21,7 @@ namespace QuotingBot.Dialogs
     public class MotorDialog : IDialog<MotorQuote>
     {
         private Validation validation = new Validation();
+        private bool sendEmails = Convert.ToBoolean(ConfigurationManager.AppSettings["SendEmails"]);
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No problem!");
@@ -107,7 +109,11 @@ namespace QuotingBot.Dialogs
                     reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
                     reply.Attachments = GetQuoteThumbnails(quotes.Quotations);
 
-                    EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                    if (sendEmails)
+                    {
+                        EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                    }
+
                     await context.PostAsync(reply);
                 }
                 else
