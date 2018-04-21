@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="QuotingBot.Common.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="QuotingBot_Common_RelayHouseholdService_Household" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://services2.relay.ie/relay.homerates.services.webservices/household.asmx</Value>
+    </Setting>
+    <Setting Name="QuotingBot_Common_RelayFullCycleMotorService_RelayFullCycleMotorService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://services2.relay.ie/relaymotorservicefour/relayfullcyclemotorservice.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
