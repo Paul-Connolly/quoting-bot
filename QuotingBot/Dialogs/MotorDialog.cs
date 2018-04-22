@@ -110,7 +110,7 @@ namespace QuotingBot.Dialogs
                 
                 var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 100, true, null, messageRequestInfo);
 
-                if (quotes.Quotations == null)
+                if (quotes.Quotations != null)
                 {
                     if (quotes.Quotations.Length > 0)
                     {
