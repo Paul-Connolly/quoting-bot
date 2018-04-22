@@ -116,11 +116,14 @@ namespace QuotingBot.Dialogs
 
                     if (SendEmails)
                     {
-                        var emailBody = EmailHandler.BuildMotorEmailBody(quotes.Quotations, state.FirstName, state.LastName, state.DateOfBirth,
+                        var emailToUserBody = EmailHandler.BuildMotorEmailBodyForUser(quotes.Quotations, state.FirstName, state.LastName, state.DateOfBirth,
                             state.PrimaryContactNumber, state.EmailAddress, state.VehicleRegistration, state.Vehicle.Description, state.VehicleValue,
                             state.AreaVehicleIsKept, state.LicenceType.GetDescription(), state.NoClaimsDiscount.GetDescription());
-                        //EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
-                        EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailBody);
+                        EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailToUserBody);
+                        var emailToBrokerBody = EmailHandler.BuildMotorEmailBodyForBroker(quotes.Quotations, state.FirstName, state.LastName, state.DateOfBirth,
+                            state.PrimaryContactNumber, state.EmailAddress, state.VehicleRegistration, state.Vehicle.Description, state.VehicleValue,
+                            state.AreaVehicleIsKept, state.LicenceType.GetDescription(), state.NoClaimsDiscount.GetDescription());
+                        EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailToBrokerBody);
                     }
 
                     await context.PostAsync(reply);

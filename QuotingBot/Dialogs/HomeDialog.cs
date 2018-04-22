@@ -110,11 +110,14 @@ namespace QuotingBot.Dialogs
 
                 if (SendEmails)
                 {
-                    var emailBody = EmailHandler.BuildHomeEmailBody(response.Quotes, state.FirstName, state.LastName, state.PrimaryContactNumber, state.EmailAddress,
+                    var emailBodyForUser = EmailHandler.BuildHomeEmailBodyForUser(response.Quotes, state.FirstName, state.LastName, state.PrimaryContactNumber, state.EmailAddress,
                         state.FirstLineOfAddress, state.Town, state.County, state.PropertyType.GetDescription(), state.ResidenceType.GetDescription(), state.YearBuilt, 
                         state.NumberOfBedrooms.ToString());
-                    //EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
-                    EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailBody);
+                    EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailBodyForUser);
+                    var emailBodyForBroker = EmailHandler.BuildHomeEmailBodyForBroker(response.Quotes, state.FirstName, state.LastName, state.PrimaryContactNumber, state.EmailAddress,
+                        state.FirstLineOfAddress, state.Town, state.County, state.PropertyType.GetDescription(), state.ResidenceType.GetDescription(), state.YearBuilt,
+                        state.NumberOfBedrooms.ToString());
+                    EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailBodyForBroker);
                 }
 
                 conversationRepository.StoreConversation
