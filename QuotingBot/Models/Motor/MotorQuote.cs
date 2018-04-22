@@ -3,14 +3,14 @@ using System.Configuration;
 using System.Globalization;
 using QuotingBot.Common.Enums;
 using QuotingBot.DAL.Repository.Errors;
-using QuotingBot.RelayFullCycleMotorService;
+using QuotingBot.Common.RelayFullCycleMotorService;
 
 namespace QuotingBot.Models.Motor
 {
     [Serializable]
     public class MotorQuote
     {
-        public static RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
+        public static Common.RelayFullCycleMotorService.RelayFullCycleMotorService motorService = new Common.RelayFullCycleMotorService.RelayFullCycleMotorService();
         private static readonly string Connection = ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
         private static readonly ErrorRepository _errorRepository = new ErrorRepository(Connection);
         public static EnumConverters enumConverters = new EnumConverters();

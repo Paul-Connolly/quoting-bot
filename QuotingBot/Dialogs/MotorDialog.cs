@@ -13,9 +13,10 @@ using System.Globalization;
 using System.Linq;
 using QuotingBot.Helpers;
 using QuotingBot.Common.Email;
+using QuotingBot.Common.Enums;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.Enums;
-using QuotingBot.RelayFullCycleMotorService;
+using QuotingBot.Common.RelayFullCycleMotorService;
 
 namespace QuotingBot.Dialogs
 {
@@ -94,7 +95,7 @@ namespace QuotingBot.Dialogs
             {
                 var quoteRepository = new QuoteRepository(Connection);
                 var conversationRepository = new ConversationRepository(Connection);
-                var motorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
+                var motorService = new Common.RelayFullCycleMotorService.RelayFullCycleMotorService();
                 
                 var riskData = MotorQuote.BuildIrishMQRiskInfo(state);
                 var messageRequestInfo = MotorQuote.BuildMessageRequestInfo();
@@ -115,7 +116,11 @@ namespace QuotingBot.Dialogs
 
                     if (SendEmails)
                     {
-                        EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                        var emailBody = EmailHandler.BuildMotorEmailBody(quotes.Quotations, state.FirstName, state.LastName, state.DateOfBirth,
+                            state.PrimaryContactNumber, state.EmailAddress, state.VehicleRegistration, state.Vehicle.Description, state.VehicleValue,
+                            state.AreaVehicleIsKept, state.LicenceType.GetDescription(), state.NoClaimsDiscount.GetDescription());
+                        //EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                        EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailBody);
                     }
 
                     await context.PostAsync(reply);

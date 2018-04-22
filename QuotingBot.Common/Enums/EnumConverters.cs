@@ -35,6 +35,8 @@ namespace QuotingBot.Common.Enums
         {
             switch (value)
             {
+                case NoClaimsDiscount.Zero:
+                    return 0;
                 case NoClaimsDiscount.One:
                     return 1;
                 case NoClaimsDiscount.Two:

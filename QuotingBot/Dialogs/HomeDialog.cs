@@ -8,6 +8,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
 using QuotingBot.Common.Email;
+using QuotingBot.Common.Enums;
 using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.DAL.Repository.Errors;
@@ -81,7 +82,6 @@ namespace QuotingBot.Dialogs
                 var homeWebServiceRequest = HomeQuote.BuildHomeWebServiceRequest(state);
 
                 var quotes = new List<HomeQuoteWebServiceResult>();
-                
                 var response = homeService.GetQuotes(homeWebServiceRequest);
 
                 if (response.Quotes != null)
@@ -101,12 +101,20 @@ namespace QuotingBot.Dialogs
                         new JavaScriptSerializer().Serialize(quotes)
                     );
                 }
+                else
+                {
+                    reply.Text = "Sorry, we couldn't get any quotes for you.";
+                }
 
                 await context.PostAsync(reply);
 
                 if (SendEmails)
                 {
-                    EmailHandler.SendEmail(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                    var emailBody = EmailHandler.BuildHomeEmailBody(response.Quotes, state.FirstName, state.LastName, state.PrimaryContactNumber, state.EmailAddress,
+                        state.FirstLineOfAddress, state.Town, state.County, state.PropertyType.GetDescription(), state.ResidenceType.GetDescription(), state.YearBuilt, 
+                        state.NumberOfBedrooms.ToString());
+                    //EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}", "");
+                    EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailBody);
                 }
 
                 conversationRepository.StoreConversation
@@ -120,7 +128,7 @@ namespace QuotingBot.Dialogs
             catch (Exception exception)
             {
                 var errorRepository = new ErrorRepository(Connection);
-                errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.InnerException.ToString());
+                errorRepository.LogError(context.Activity.Conversation.Id, context.Activity.From.Id, DateTime.Now.ToString(), context.ConversationData.ToString(), exception.ToString());
                 throw;
             }
             finally

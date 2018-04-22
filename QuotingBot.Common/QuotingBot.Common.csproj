@@ -83,6 +83,7 @@
     <Compile Include="Email\EmailHandler.cs" />
     <Compile Include="Enums\Emoji.cs" />
     <Compile Include="Enums\EnumConverters.cs" />
+    <Compile Include="Enums\EnumExtension.cs" />
     <Compile Include="Enums\LicenceType.cs" />
     <Compile Include="Enums\NoClaimsDiscount.cs" />
     <Compile Include="Enums\PropertyType.cs" />
