@@ -53,7 +53,7 @@ namespace QuotingBot.Common.Enums
                     return 7;
                 case NoClaimsDiscount.Eight:
                     return 8;
-                case NoClaimsDiscount.NineAndMore:
+                case NoClaimsDiscount.NineOrMore:
                     return 9;
                 default:
                     return 0;

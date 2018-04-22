@@ -25,6 +25,6 @@ namespace QuotingBot.Common.Enums
         [Description("8")]
         Eight,
         [Description("9+")]
-        NineAndMore
+        NineOrMore
     }
 }

@@ -15,14 +15,14 @@ namespace QuotingBot.Models.Home
         public string FirstLineOfAddress;
         public string Town;
         public string County;
+        public PropertyType? PropertyType;
+        public ResidenceType? ResidenceType;
+        public int? NumberOfBedrooms;
+        public string YearBuilt;
         public string FirstName;
         public string LastName;
         public string PrimaryContactNumber;
         public string EmailAddress;
-        public PropertyType? PropertyType;
-        public ResidenceType? ResidenceType;
-        public string YearBuilt;
-        public int? NumberOfBedrooms;
 
         public static HomeWebServiceRequest BuildHomeWebServiceRequest(HomeQuote state)
         {

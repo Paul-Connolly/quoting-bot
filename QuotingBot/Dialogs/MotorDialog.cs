@@ -80,8 +80,17 @@ namespace QuotingBot.Dialogs
                 .AddRemainingFields()
                 .Field(nameof(MotorQuote.EmailAddress),
                     validate: async (state, value) => _validation.ValidateEmailAddress(value))
-                .Confirm("Do you want to request a quote using the following details?" +
-                         "Car Registration: {VehicleRegistration}")
+                .Confirm("Do you want to request a quote using the following details?\n\n" +
+                         "\n\n" +
+                         "Car registration: {VehicleRegistration}\n\n" +
+                         "Vehicle value: {VehicleValue}\n\n" +
+                         "Area vehicle is kept: {AreaVehicleIsKept}\n\n" +
+                         "Name: {FirstName} {LastName}\n\n" +
+                         "Date of birth: {DateOfBirth}\n\n" +
+                         "Licence Type: {LicenceType}\n\n" +
+                         "No claims Discount: {NoClaimsDiscount} years\n\n" +
+                         "Contact number: {PrimaryContactNumber}\n\n" +
+                         "Email: {EmailAddress}")
                 .OnCompletion(getMotorQuotes)
                 .Build();
         }

@@ -48,6 +48,12 @@ namespace QuotingBot.Dialogs
                     validate: async (state, value) => _validation.ValidateTown(value))
                 .Field(nameof(HomeQuote.County),
                     validate: async (state, value) => _validation.ValidateCounty(value))
+                .AddRemainingFields()
+                .Field(nameof(HomeQuote.NumberOfBedrooms),
+                    prompt: "How many bedrooms are in the property? (0-9 bedrooms)",
+                    validate: async (state, value) => _validation.ValidateNumberOfBedrooms(value))
+                .Field(nameof(HomeQuote.YearBuilt),
+                    validate: async (state, value) => _validation.ValidateYearBuilt(value))
                 .Field(nameof(HomeQuote.FirstName),
                     validate: async (state, value) => _validation.ValidateFirstName(value))
                 .Field(nameof(HomeQuote.LastName),
@@ -55,15 +61,16 @@ namespace QuotingBot.Dialogs
                 .AddRemainingFields()
                 .Field(nameof(HomeQuote.EmailAddress),
                     validate: async (state, value) => _validation.ValidateEmailAddress(value))
-                .AddRemainingFields()
-                .Field(nameof(HomeQuote.YearBuilt),
-                    validate: async (state, value) => _validation.ValidateYearBuilt(value))
-                .Field(nameof(HomeQuote.NumberOfBedrooms),
-                    prompt: "How many bedrooms are in the property? (0-9 bedrooms)",
-                    validate: async (state, value) => _validation.ValidateNumberOfBedrooms(value))
-                .AddRemainingFields()
-                .Confirm("Do you want to request a quote using the following details?" +
-                         "Address: {FirstLineOfAddress}, {Town}, {County}")
+                .Confirm("Do you want to request a quote using the following details?\n\n" +
+                         "\n\n" +
+                         "Address: {FirstLineOfAddress}, {Town}, {County}\n\n" +
+                         "Property type: {PropertyType}\n\n" +
+                         "Residence type: {ResidenceType}\n\n" +
+                         "Year built: {YearBuilt}\n\n" +
+                         "No.of bedrooms: {NumberOfBedrooms}\n\n" +
+                         "Name: {FirstName} {LastName}\n\n" +
+                         "Contact number: {PrimaryContactNumber}\n\n" +
+                         "Email: {EmailAddress}")
                 .OnCompletion(getHomeQuotes)
                 .Build();
         }
