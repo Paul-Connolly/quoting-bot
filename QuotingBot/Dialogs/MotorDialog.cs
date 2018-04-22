@@ -111,31 +111,42 @@ namespace QuotingBot.Dialogs
                 
                 var quotes = motorService.GetNewBusinessXBreakDownsSpecified(riskData, 100, true, null, messageRequestInfo);
 
-                if (quotes.Quotations != null)
+                if (quotes.Quotations == null)
                 {
-                    quoteRepository.StoreQuote
-                    (
-                        context.Activity.Conversation.Id,
-                        quotes.TransactionID,
-                        new JavaScriptSerializer().Serialize(quotes.Quotations[0])
-                    );
-
-                    reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
-                    reply.Attachments = GetQuoteReceipts(quotes.Quotations);
-
-                    if (SendEmails)
+                    if (quotes.Quotations.Length > 0)
                     {
-                        var emailToUserBody = EmailHandler.BuildMotorEmailBodyForUser(quotes.Quotations, state.FirstName, state.LastName, state.DateOfBirth,
-                            state.PrimaryContactNumber, state.EmailAddress, state.VehicleRegistration, state.Vehicle.Description, state.VehicleValue,
-                            state.AreaVehicleIsKept, state.LicenceType.GetDescription(), state.NoClaimsDiscount.GetDescription());
-                        EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailToUserBody);
-                        var emailToBrokerBody = EmailHandler.BuildMotorEmailBodyForBroker(quotes.Quotations, state.FirstName, state.LastName, state.DateOfBirth,
-                            state.PrimaryContactNumber, state.EmailAddress, state.VehicleRegistration, state.Vehicle.Description, state.VehicleValue,
-                            state.AreaVehicleIsKept, state.LicenceType.GetDescription(), state.NoClaimsDiscount.GetDescription());
-                        EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}", emailToBrokerBody);
-                    }
+                        quoteRepository.StoreQuote
+                        (
+                            context.Activity.Conversation.Id,
+                            quotes.TransactionID,
+                            new JavaScriptSerializer().Serialize(quotes.Quotations[0])
+                        );
 
-                    await context.PostAsync(reply);
+                        reply.AttachmentLayout = AttachmentLayoutTypes.Carousel;
+                        reply.Attachments = GetQuoteReceipts(quotes.Quotations);
+
+                        if (SendEmails)
+                        {
+                            var emailToUserBody = EmailHandler.BuildMotorEmailBodyForUser(quotes.Quotations,
+                                state.FirstName, state.LastName, state.DateOfBirth,
+                                state.PrimaryContactNumber, state.EmailAddress, state.VehicleRegistration,
+                                state.Vehicle.Description, state.VehicleValue,
+                                state.AreaVehicleIsKept, state.LicenceType.GetDescription(),
+                                state.NoClaimsDiscount.GetDescription());
+                            EmailHandler.SendEmailToUser(state.EmailAddress, $"{state.FirstName} {state.LastName}",
+                                emailToUserBody);
+                            var emailToBrokerBody = EmailHandler.BuildMotorEmailBodyForBroker(quotes.Quotations,
+                                state.FirstName, state.LastName, state.DateOfBirth,
+                                state.PrimaryContactNumber, state.EmailAddress, state.VehicleRegistration,
+                                state.Vehicle.Description, state.VehicleValue,
+                                state.AreaVehicleIsKept, state.LicenceType.GetDescription(),
+                                state.NoClaimsDiscount.GetDescription());
+                            EmailHandler.SendEmailToBroker(state.EmailAddress, $"{state.FirstName} {state.LastName}",
+                                emailToBrokerBody);
+                        }
+
+                        await context.PostAsync(reply);
+                    }
                 }
                 else
                 {
