@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QuotingBot.Helpers
+namespace QuotingBot.Common.Helpers
 {
     [Serializable]
     public class Formatter

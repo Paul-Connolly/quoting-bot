@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
-using QuotingBot.Helpers;
+using QuotingBot.Common.Helpers;
 using QuotingBot.Common.Email;
 using QuotingBot.Common.Enums;
 using QuotingBot.DAL.Repository.Conversations;
@@ -154,10 +154,10 @@ namespace QuotingBot.Dialogs
 
         private IList<Attachment> GetQuoteReceipts(IrishMQResultsBreakdown[] breakdowns)
         {
-            return breakdowns.Select(breakdown => GetReceiptCard(breakdown)).ToList();
+            return breakdowns.Select(breakdown => BuildReceiptCard(breakdown)).ToList();
         }
 
-        private static Attachment GetReceiptCard(IrishMQResultsBreakdown breakdown)
+        private static Attachment BuildReceiptCard(IrishMQResultsBreakdown breakdown)
         {
             try
             {

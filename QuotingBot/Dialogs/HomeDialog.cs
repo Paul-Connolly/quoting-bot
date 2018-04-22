@@ -13,7 +13,7 @@ using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.DAL.Repository.Errors;
 using QuotingBot.Enums;
-using QuotingBot.Helpers;
+using QuotingBot.Common.Helpers;
 using QuotingBot.Models.Home;
 using QuotingBot.Common.RelayHouseholdService;
 

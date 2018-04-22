@@ -9,33 +9,33 @@ namespace QuotingBot.Dialogs
     [Serializable]
     public sealed class RootDialog : IDialog<object>
     {
-        private readonly string _motorInsuranceOption = $"Motor insurance {Emoji.Car}";
-        private readonly string _homeInsuranceOption = $"Home insurance {Emoji.House}";
+        private static readonly string MotorInsuranceOption = $"Motor insurance {Emoji.Car}";
+        private static readonly string HomeInsuranceOption = $"Home insurance {Emoji.House}";
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Hi, I'm Ava - your friendly quoting bot!");
             context.Wait(MessageReceivedAsync);
         }
 
-        private void ShowQuoteOptions(IDialogContext context)
+        public static void ShowQuoteOptions(IDialogContext context)
         {
             PromptDialog.Choice
             (
                 context, 
                 OnOptionSelected, 
-                new List<string> { _motorInsuranceOption, _homeInsuranceOption }, 
+                new List<string> { MotorInsuranceOption, HomeInsuranceOption }, 
                 "What can I get you a quote for today?",
                 "Hmmm...that's not a valid option.  Please choose an option from the list."
             );
         }
 
-        private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
+        public static async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
         {
             try
             {
                 var optionSelected = await result;
 
-                if (optionSelected == _motorInsuranceOption)
+                if (optionSelected == MotorInsuranceOption)
                 {
                     context.Call(new MotorDialog(), ResumeAfterOptionDialog);
                 }
@@ -47,12 +47,10 @@ namespace QuotingBot.Dialogs
             catch (Exception)
             {
                 await context.PostAsync($"Oops! Something went wrong.");
-
-                context.Wait(MessageReceivedAsync);
             }
         }
 
-        private async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
+        private static async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
         {
             try
             {
@@ -68,7 +66,7 @@ namespace QuotingBot.Dialogs
             }
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        public static async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             ShowQuoteOptions(context);
         }

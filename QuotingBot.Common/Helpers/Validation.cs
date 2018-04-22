@@ -3,19 +3,18 @@ using System;
 using System.Configuration;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using QuotingBot.Common.RelayFullCycleMotorService;
 using QuotingBot.DAL.Repository.Errors;
 using QuotingBot.Enums;
 using System.Linq;
 
-namespace QuotingBot.Helpers
+namespace QuotingBot.Common.Helpers
 {
     [Serializable]
     public class Validation
     {
         private static readonly string Connection = ConfigurationManager.ConnectionStrings["QuotingBot"].ConnectionString;
         private static readonly ErrorRepository ErrorRepository = new ErrorRepository(Connection);
-        private static readonly RelayFullCycleMotorService MotorService = new RelayFullCycleMotorService();
+        private static readonly RelayFullCycleMotorService.RelayFullCycleMotorService MotorService = new RelayFullCycleMotorService.RelayFullCycleMotorService();
         private readonly Formatter _formatter = new Formatter();
         public Validation() { }
 
