@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
-using QuotingBot.Enums;
+using QuotingBot.Common.Enums;
 
 namespace QuotingBot.Dialogs
 {
     [Serializable]
     public sealed class RootDialog : IDialog<object>
     {
-        private static readonly string MotorInsuranceOption = $"Motor insurance {Emoji.Car}";
-        private static readonly string HomeInsuranceOption = $"Home insurance {Emoji.House}";
+        private static readonly string MotorInsuranceOption = $"Motor insurance {Emoji.Car.GetDescription()}";
+        private static readonly string HomeInsuranceOption = $"Home insurance {Emoji.House.GetDescription()}";
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("Hi, I'm Ava - your friendly quoting bot!");
@@ -29,7 +29,7 @@ namespace QuotingBot.Dialogs
             );
         }
 
-        public static async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
+        private static async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
         {
             try
             {

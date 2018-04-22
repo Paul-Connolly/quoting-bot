@@ -15,7 +15,6 @@ using QuotingBot.Common.Helpers;
 using QuotingBot.Common.Email;
 using QuotingBot.Common.Enums;
 using QuotingBot.DAL.Repository.Conversations;
-using QuotingBot.Enums;
 using QuotingBot.Common.RelayFullCycleMotorService;
 
 namespace QuotingBot.Dialogs
@@ -31,7 +30,7 @@ namespace QuotingBot.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync("No problem!");
-            await context.PostAsync($"Let's get started {Emoji.GrinningFace}");
+            await context.PostAsync($"Let's get started {Emoji.GrinningFace.GetDescription()}");
 
             var motorQuoteFormDialog = FormDialog.FromForm(this.BuildMotorQuoteForm, FormOptions.PromptInStart);
             context.Call(motorQuoteFormDialog, this.ResumeAfterMotorQuoteFormDialog);
@@ -60,7 +59,7 @@ namespace QuotingBot.Dialogs
                         else
                         {
                             result.IsValid = false;
-                            result.Feedback = $"Hmmm...I couldn't find a match for that registration {Emoji.ThinkingFace} Please try again";
+                            result.Feedback = $"Hmmm...I couldn't find a match for that registration {Emoji.ThinkingFace.GetDescription()} Please try another registration";
                         }
                         return result;
                     }

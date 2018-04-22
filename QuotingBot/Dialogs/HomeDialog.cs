@@ -12,7 +12,6 @@ using QuotingBot.Common.Enums;
 using QuotingBot.DAL.Quotes;
 using QuotingBot.DAL.Repository.Conversations;
 using QuotingBot.DAL.Repository.Errors;
-using QuotingBot.Enums;
 using QuotingBot.Common.Helpers;
 using QuotingBot.Models.Home;
 using QuotingBot.Common.RelayHouseholdService;
@@ -29,7 +28,7 @@ namespace QuotingBot.Dialogs
 
         public async Task StartAsync(IDialogContext context)
         {
-            await context.PostAsync($"No worries - let's do it {Emoji.GrinningFace}");
+            await context.PostAsync($"No worries - let's do it {Emoji.GrinningFace.GetDescription()}");
 
             var homeQuoteFormDialog = FormDialog.FromForm(this.BuildHomeQuoteForm, FormOptions.PromptInStart);
             context.Call(homeQuoteFormDialog, ResumeAfterHomeQuoteFormDialog);

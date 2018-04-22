@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using QuotingBot.DAL.Repository.Errors;
-using QuotingBot.Enums;
+using QuotingBot.Common.Enums;
 using System.Linq;
 
 namespace QuotingBot.Common.Helpers
@@ -48,7 +48,7 @@ namespace QuotingBot.Common.Helpers
             if(!string.IsNullOrEmpty(firstName))
             {
                 result.IsValid = true;
-                result.Value = _formatter.CapitilzeFirstLetter(firstName);
+                result.Value = _formatter.CapitilizeFirstLetter(firstName);
             }
             else
             {
@@ -74,7 +74,7 @@ namespace QuotingBot.Common.Helpers
             }
             else
             {
-                result.Feedback = $"Oh dear...I don't recognise that town.  Can you check the spelling of '{town}' or try an area close by? Thanks {Emoji.ThumbsUp}";
+                result.Feedback = $"Oh dear...I don't recognise that town.  Can you check the spelling of '{town}' or try an area close by? Thanks {Emoji.ThumbsUp.GetDescription()}";
             }
 
             return result;
@@ -96,7 +96,7 @@ namespace QuotingBot.Common.Helpers
             }
             else
             {
-                result.Feedback = $"Oh dear...I don't recognise that county.  Can you check the spelling of '{county}' or try an area close by? Thanks {Emoji.ThumbsUp}";
+                result.Feedback = $"Oh dear...I don't recognise that county.  Can you check the spelling of '{county}' or try an area close by? Thanks {Emoji.ThumbsUp.GetDescription()}";
             }
 
             return result;
@@ -140,7 +140,7 @@ namespace QuotingBot.Common.Helpers
             if (!string.IsNullOrEmpty(lastName))
             {
                 result.IsValid = true;
-                result.Value = _formatter.CapitilzeFirstLetter(lastName);
+                result.Value = _formatter.CapitilizeFirstLetter(lastName);
             }
             else
             {

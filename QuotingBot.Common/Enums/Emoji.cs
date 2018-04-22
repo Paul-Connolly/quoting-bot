@@ -1,16 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 
-namespace QuotingBot.Enums
+namespace QuotingBot.Common.Enums
 {
     [Serializable]
-    public class Emoji
+    public enum Emoji
     {
-        public const string GrinningFace = "\U0001F604";
-        public const string ThinkingFace = "\U0001F914";
-        public const string ThumbsUp = "\U0001F44D";
-        public const string Car = "\U0001F698";
-        public const string House = "\U0001F3E1";
-        public const string Email = "\U0001F4E7";
+        [Description("\U0001F604")]
+        GrinningFace,
+        [Description("\U0001F914")]
+        ThinkingFace,
+        [Description("\U0001F44D")]
+        ThumbsUp,
+        [Description("\U0001F698")]
+        Car,
+        [Description("\U0001F3E1")]
+        House,
+        [Description("\U0001F4E7")]
+        Email
     }
 }

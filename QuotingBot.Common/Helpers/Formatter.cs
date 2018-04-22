@@ -7,7 +7,7 @@ namespace QuotingBot.Common.Helpers
     {
         public Formatter() { }
 
-        public string CapitilzeFirstLetter(string value)
+        public string CapitilizeFirstLetter(string value)
         {
             char[] characters = value.ToCharArray();
             characters[0] = char.ToUpper(characters[0]);

@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using QuotingBot.Common.RelayFullCycleMotorService;
 using QuotingBot.Common.RelayHouseholdService;
-using QuotingBot.Enums;
+using QuotingBot.Common.Enums;
 
 namespace QuotingBot.Common.Email
 {
@@ -104,7 +104,7 @@ namespace QuotingBot.Common.Email
 
 
             body += "Thanks,<br>";
-            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace}";
+            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace.GetDescription()}";
 
             return body;
         }
@@ -145,7 +145,7 @@ namespace QuotingBot.Common.Email
             body += $"<strong>No Claims Discount:</strong> {noClaimsDiscountYears}<br><br>";
 
             body += "Thanks,<br>";
-            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace}";
+            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace.GetDescription()}";
 
             return body;
         }
@@ -212,7 +212,7 @@ namespace QuotingBot.Common.Email
             body += $"<strong>No Claims Discount:</strong> {noClaimsDiscountYears}<br><br>";
 
             body += "Thanks,<br>";
-            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace}";
+            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace.GetDescription()}";
 
             return body;
         }
@@ -254,7 +254,7 @@ namespace QuotingBot.Common.Email
 
 
             body += "Thanks,<br>";
-            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace}";
+            body += $"Ava - your friendly Quoting Bot {Emoji.GrinningFace.GetDescription()}";
 
             return body;
         }
