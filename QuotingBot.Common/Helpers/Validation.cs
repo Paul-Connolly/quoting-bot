@@ -166,7 +166,7 @@ namespace QuotingBot.Common.Helpers
             }
             else
             {
-                result.Feedback = $"Oh dear...I don't recognise that area.  Can you check the spelling of '{area}' or try an area close by? Thanks {Emoji.ThumbsUp}";
+                result.Feedback = $"Oh dear...I don't recognise that area.  Can you check the spelling of '{area}' or try an area close by? Thanks {Emoji.ThumbsUp.GetDescription()}";
             }
 
             return result;
@@ -218,7 +218,7 @@ namespace QuotingBot.Common.Helpers
             }
             else
             {
-                result.Feedback = $"Please enter a valid email address {Emoji.Email}";
+                result.Feedback = $"Please enter a valid email address {Emoji.Email.GetDescription()}";
             }
 
             return result;
